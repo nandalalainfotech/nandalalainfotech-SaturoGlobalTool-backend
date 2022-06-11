@@ -4,6 +4,7 @@ import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { TaskallocationDTO } from "src/dto/Taskallocation001wb.dto";
 import { Taskallocation001wb } from "src/entity/Taskallocation001wb";
 import { TaskallocationService } from "src/service/Taskallocation.service";
+
  
 @Controller('/testandreportstudio/api/taskallocation')
 export class TaskAllocationController {
@@ -12,7 +13,7 @@ export class TaskAllocationController {
 	@Post('save')
 	@UseInterceptors(FileInterceptor('file'))
 	uploadFile(@UploadedFile() file: Express.Multer.File, @Body() taskallocationDTO: TaskallocationDTO) {
-		// console.log("taskallocationDTOtaskallocationDTO", taskallocationDTO);
+		console.log("taskallocationDTOtaskallocationDTO", taskallocationDTO);
 		return this.taskallocationService.create(file, taskallocationDTO);
 	}
 
@@ -23,9 +24,9 @@ export class TaskAllocationController {
 	}
 	
 	@UseGuards(JwtAuthGuard)
-	@Get('findAll')
-	findAll(): Promise<Taskallocation001wb[]> {
-		return this.taskallocationService.findAll();
+	@Get('findAll/:username')
+	findAll(@Param('username') username: any): Promise<Taskallocation001wb[]> {
+		return this.taskallocationService.findAll(username);
 	}
 
 	@UseGuards(JwtAuthGuard)

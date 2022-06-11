@@ -2,7 +2,7 @@ import { RoleDTO } from "src/dto/Role.dto";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User001mb } from "./User001mb";
 
-@Entity("role001mb", { schema: "trims" })
+@Entity("role001mb", { schema: "newsaturo" })
 export class Role001mb {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;

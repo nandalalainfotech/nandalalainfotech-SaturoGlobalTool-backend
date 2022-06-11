@@ -29,10 +29,10 @@ export class AssayController {
 
 	// @hasRole(Role.Admin,Role.User)
 	// @UseGuards(JwtAuthGuard, RolesGuard)
-	@Get('findAll')
-	findAll(): Promise<Assay001wb[]> {
-		console.log("findall-controller");
-		return this.assayService.findAll();
+	@Get('findAll/:username')
+	findAll(@Param('username') username: any): Promise<Assay001wb[]> {
+		// console.log("findall-controller");
+		return this.assayService.findAll(username);
 	}
 
 
