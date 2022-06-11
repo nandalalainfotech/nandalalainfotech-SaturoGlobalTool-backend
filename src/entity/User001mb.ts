@@ -13,7 +13,7 @@ import { UserDTO } from "src/dto/User.dto";
 
 
 @Index("roleid", ["roleid"], {})
-@Entity("user001mb", { schema: "trims" })
+@Entity("user001mb", { schema: "newsaturo" })
 export class User001mb {
   @PrimaryGeneratedColumn({ type: "int", name: "person_id" })
   personId: number;
