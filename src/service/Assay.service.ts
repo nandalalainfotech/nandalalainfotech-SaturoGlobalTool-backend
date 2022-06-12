@@ -5,8 +5,8 @@ import { Assay001wb } from "src/entity/Assay001wb";
 import { Ligand001wb } from "src/entity/Ligand001wb";
 import { Taskallocation001wb } from "src/entity/Taskallocation001wb";
 import { User001mb } from "src/entity/User001mb";
-import { Repository } from "typeorm";
-
+import { getRepository, In, Repository } from "typeorm";
+​
 @Injectable()
 export class AssayService {
     constructor(
@@ -14,7 +14,7 @@ export class AssayService {
         @InjectRepository(Assay001wb) private readonly assayRepository: Repository<Assay001wb>,
         @InjectRepository(Taskallocation001wb) private readonly taskAllocateRepository: Repository<Taskallocation001wb>,
         @InjectRepository(Ligand001wb) private readonly ligandRepository: Repository<Ligand001wb>) {
-
+​
     }
     async create(assayDTO: AssayDTO): Promise<Assay001wb> {
         // console.log("assayDTO", assayDTO);
@@ -24,7 +24,7 @@ export class AssayService {
             assay001wb.targetStatus = "";
             assay001wb.target = "";
         }
-
+​
         return this.assayRepository.save(assay001wb);
     }
     async update(assayDTO: AssayDTO): Promise<Assay001wb> {
@@ -34,50 +34,65 @@ export class AssayService {
         return assay001wb;
     }
 
+
     async findAll(username: any): Promise<Assay001wb[]> {
-        let Assays: Assay001wb[] = [];
-        Assays = await this.assayRepository.find({ relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
-        let AssayTan = [];
-        for (let i = 0; i < Assays.length; i++) {
-            AssayTan.push(Assays[i].ligandSlno2.tanNumber);
 
-        }
-// console.log("AssayTan",AssayTan);
-
-        // let Ligands: Ligand001wb[] = [];
-        // Ligands = await this.ligandRepository.find({ relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
-        // let LigandTan = [];
-        // for (let i = 0; i < Ligands.length; i++) {
-        //     LigandTan.push(Ligands[i].tanNumber);
-
-        // }
-
+        // let user = [];
+        // user.push(username);
+        // console.log("username findAll-->", user[0]);
+        return await this.assayRepository.find({ relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+    }
+​
+    async findByReviewer(username: any): Promise<Assay001wb[]> {
+​
         let taskAllocations: Taskallocation001wb[] = [];
         taskAllocations = await this.taskAllocateRepository.find({ where: { reviewerName: username } });
         let taskTanNo = [];
         for (let i = 0; i < taskAllocations.length; i++) {
             taskTanNo.push(taskAllocations[i].reviewerTanNo);
         }
-
-        let legands: Assay001wb[] = [];
-        for (let i = 0; i < Assays.length; i++) {
-            for (let j = 0; j < taskAllocations.length; j++) {
-
-                if (Assays[i].ligandSlno2.tanNumber == taskAllocations[j].reviewerTanNo) {
-
-                    console.log("Assays tan", Assays[i].ligandSlno2.tanNumber);
-                    console.log("taskAllocations tan", taskAllocations[j].reviewerTanNo);
-                    // let legands: Measurement001wb[] = [];
-                    legands = await this.assayRepository.find({where:{ligandSlno2:{tanNumber:taskAllocations[j].reviewerTanNo}}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
-
-                }
-            }
+       // console.log("taskTanNo", taskTanNo);
+       
+        let ligands: Ligand001wb[] = [];
+        ligands = await this.ligandRepository.find({ where: { tanNumber: In(taskTanNo) } });
+        console.log("liands",ligands);
+        
+        let ligandids= [];
+        for (let i = 0; i < ligands.length; i++) {
+            ligandids.push(ligands[i].ligandId);
         }
-
-        return legands;
-        // return await this.assayRepository.find({relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2","ligandSlno2", "ligandSlno2.ligandVersionSlno2","ligandSlno2.ligandTypeSlno2","categorySlno2","functionSlno2","originalPrefixSlno2", "typeSlno2"]} );
+        // console.log("ligandids", ligandids);
+​
+        let Assays: Assay001wb[] = [];
+        Assays = await this.assayRepository.find({where:{ligandSlno2:{ligandId: In(ligandids)}}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+        return Assays;
     }
 
+    // async findByCuratorTan(username: any): Promise<Assay001wb[]> {
+
+    //     let taskAllocations: Taskallocation001wb[] = [];
+    //     taskAllocations = await this.taskAllocateRepository.find({ where: { curatorName: username } });
+    //     let taskTanNo = [];
+    //     for (let i = 0; i < taskAllocations.length; i++) {
+    //         taskTanNo.push(taskAllocations[i].curatorTanNo);
+    //     }
+    //     // console.log("taskTanNo", taskTanNo);
+
+    //     let ligands: Ligand001wb[] = [];
+    //     ligands = await this.ligandRepository.find({ where: { tanNumber: In(taskTanNo) } });
+    //     console.log("liands", ligands);
+
+    //     let ligandids = [];
+    //     for (let i = 0; i < ligands.length; i++) {
+    //         ligandids.push(ligands[i].ligandId);
+    //     }
+    //     // console.log("ligandids", ligandids);
+
+    //    let CuratorTask: Assay001wb[] = [];
+    //    CuratorTask = await this.assayRepository.find({where:{ligandSlno2:{ligandId: In(ligandids)}}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+    //     return CuratorTask;
+    // }
+​
     findOne(id: number): Promise<Assay001wb> {
         return this.assayRepository.findOne(id);
     }

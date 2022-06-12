@@ -37,6 +37,24 @@ export class AssayController {
 
 
 	// @hasRole(Role.Admin,Role.User)
+	// @UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('findByReviewer/:username')
+	findByReviewer(@Param('username') username: any): Promise<Assay001wb[]> {
+		// console.log("findall-controller");
+		return this.assayService.findByReviewer(username);
+	}
+
+	
+	
+	// @Get('findByCuratorTan/:username')
+	// findByCuratorTan(@Param('username') username: any): Promise<Assay001wb[]> {
+	// 	// console.log("findall-controller");
+	// 	return this.assayService.findByCuratorTan(username);
+	// }
+
+
+
+	// @hasRole(Role.Admin,Role.User)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Delete('delete/:assayId')
 	remove(@Param('assayId') assayId: number): Promise<void> {
