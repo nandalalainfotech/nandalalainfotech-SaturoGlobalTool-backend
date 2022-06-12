@@ -30,6 +30,12 @@ export class TaskAllocationController {
 	}
 
 	@UseGuards(JwtAuthGuard)
+    @Get('findByTanNo/:username')
+    findByTanNo(@Param('username') username: any): Promise<Taskallocation001wb[]> {
+        return this.taskallocationService.findByTanNo(username);
+    }
+
+	@UseGuards(JwtAuthGuard)
 	@Delete('delete/:id')
 	remove(@Param('id') id: number): Promise<void> {
 		return this.taskallocationService.remove(id);

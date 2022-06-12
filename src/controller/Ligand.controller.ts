@@ -35,11 +35,11 @@ export class LigandController {
 		return this.ligandService.findAll(username);
 	}
 
-	// @UseGuards(JwtAuthGuard)
-	// @Get('findAllByUser/:username')
-	// findAllByUser(@Param('username') username: any): Promise<Ligand001wb[]> {
-	// 	console.log("username findAllByUser-->",username);
-	// 	return this.ligandService.findAll();
+	
+	// @Get('findByCuratorTan/:username')
+	// findByCuratorTan(@Param('username') username: any): Promise<Ligand001wb[]> {
+	// 	// console.log("findall-controller");
+	// 	return this.ligandService.findByCuratorTan(username);
 	// }
 
 	

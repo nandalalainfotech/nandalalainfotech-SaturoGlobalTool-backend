@@ -54,14 +54,13 @@ export class TaskallocationService {
             taskallocation001wb.insertUser = taskallocationDTO.insertUser;
             taskallocation001wb.insertDatetime = taskallocationDTO.insertDatetime;
             
-
             
             let random = Math.floor(Math.random() * reviewers.length);
             taskallocation001wb.reviewerName = reviewers[random].username;
             taskallocation001wb.reviewerTanNo = sheet[i].TANNUMBER;
             this.taskAllocateRepository.save(taskallocation001wb);
             taskallocation001wbs.push(taskallocation001wb);
-            // console.log("taskallocation001wb for reviewer-----------------", taskallocation001wb);
+            //  console.log("taskallocation001wb for reviewer-----------------", taskallocation001wb);
         }
         
         return taskallocation001wbs;
@@ -81,6 +80,10 @@ export class TaskallocationService {
 
     async findAll(username: any): Promise<Taskallocation001wb[]> {
         return await this.taskAllocateRepository.find();
+    }
+
+    async findByTanNo(username: any): Promise<Taskallocation001wb[]> {
+        return await this.taskAllocateRepository.find({ where: { curatorName: username } });
     }
 
     findOne(curatorId: number): Promise<Taskallocation001wb> {
