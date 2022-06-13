@@ -106,6 +106,15 @@ export class Assay001wb {
   @Column("varchar", { name: "dataLocator", nullable: true, length: 30 })
   dataLocator: string | null;
 
+  @Column("varchar", { name: "dataLocator1", nullable: true, length: 30 })
+  dataLocator1: string | null;
+
+  @Column("varchar", { name: "dataLocator2", nullable: true, length: 30 })
+  dataLocator2: string | null;
+
+  @Column("varchar", { name: "dataLocator3", nullable: true, length: 30 })
+  dataLocator3: string | null;
+
   @Column("int", { name: "category_slno", nullable: true })
   categorySlno: number | null;
 
@@ -309,6 +318,9 @@ export class Assay001wb {
     this.unitedSlno = assayDTO.unitedSlno;
     this.status = assayDTO.status;
     this.dataLocator = assayDTO.dataLocator;
+    this.dataLocator1 = assayDTO.dataLocator1;
+    this.dataLocator2 = assayDTO.dataLocator2;
+    this.dataLocator3 = assayDTO.dataLocator3;
     this.categorySlno = assayDTO.categorySlno;
     this.functionSlno = assayDTO.functionSlno;
     this.parameter = assayDTO.parameter;
