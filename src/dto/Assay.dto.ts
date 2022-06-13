@@ -35,6 +35,9 @@ export class AssayDTO {
     unitedSlno: number;
     status: string;
     dataLocator: string;
+    dataLocator1: string | null;
+    dataLocator2: string | null;
+    dataLocator3: string | null;
     categorySlno: number;
     functionSlno: number;
     parameter: string;
@@ -136,6 +139,9 @@ export class AssayDTO {
         this.unitedSlno = assay001wb.unitedSlno;
         this.status = assay001wb.status;
         this.dataLocator = assay001wb.dataLocator;
+        this.dataLocator1 = assay001wb.dataLocator1;
+        this.dataLocator2 = assay001wb.dataLocator2;
+        this.dataLocator3 = assay001wb.dataLocator3;
         this.categorySlno = assay001wb.categorySlno;
         this.functionSlno = assay001wb.functionSlno;
         this.parameter = assay001wb.parameter;
