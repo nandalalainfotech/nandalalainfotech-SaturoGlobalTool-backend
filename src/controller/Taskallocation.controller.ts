@@ -13,7 +13,7 @@ export class TaskAllocationController {
 	@Post('save')
 	@UseInterceptors(FileInterceptor('file'))
 	uploadFile(@UploadedFile() file: Express.Multer.File, @Body() taskallocationDTO: TaskallocationDTO) {
-		console.log("taskallocationDTOtaskallocationDTO", taskallocationDTO);
+		// console.log("taskallocationDTOtaskallocationDTO", taskallocationDTO);
 		return this.taskallocationService.create(file, taskallocationDTO);
 	}
 
