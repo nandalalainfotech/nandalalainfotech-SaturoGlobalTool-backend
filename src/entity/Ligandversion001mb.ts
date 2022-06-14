@@ -3,7 +3,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Assay001wb } from "./Assay001wb";
 import { Ligand001wb } from "./Ligand001wb";
 
-@Entity("ligandversion001mb", { schema: "saturo" })
+@Entity("ligandversion001mb", { schema: "newsaturo" })
 export class Ligandversion001mb {
   @PrimaryGeneratedColumn({ type: "int", name: "Id" })
   id: number;

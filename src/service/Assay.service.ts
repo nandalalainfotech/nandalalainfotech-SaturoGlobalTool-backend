@@ -20,7 +20,7 @@ export class AssayService {
         // console.log("assayDTO", assayDTO);
         const assay001wb = new Assay001wb();
         assay001wb.setProperties(assayDTO);
-        if (assay001wb.targetVersion == "") {
+        if (assay001wb.targetVersion == "" || assay001wb.targetVersion == null) {
             assay001wb.targetStatus = "";
             assay001wb.target = "";
         }
@@ -30,6 +30,10 @@ export class AssayService {
     async update(assayDTO: AssayDTO): Promise<Assay001wb> {
         const assay001wb = new Assay001wb();
         assay001wb.setProperties(assayDTO);
+        if (assay001wb.targetVersion == "" || assay001wb.targetVersion == null) {
+            assay001wb.targetStatus = "";
+            assay001wb.target = "";
+        }
         await this.assayRepository.update({ assayId: assay001wb.assayId }, assay001wb);
         return assay001wb;
     }
