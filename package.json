@@ -47,7 +47,8 @@
     "typeorm": "0.2.32",
     "typeorm-naming-strategies": "2.0.0",
     "typeorm-snake-naming-strategy": "1.0.2",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "zip-dir": "^2.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "7.6.0",
