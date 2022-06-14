@@ -35,32 +35,23 @@ export class LigandService {
         return await this.ligandRepository.find({ relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
 
-    // async findByCuratorTan(username: any): Promise<Ligand001wb[]> {
+    async findInprocesStatus(username: any): Promise<Ligand001wb[]> {
 
-    //     let taskAllocations: Taskallocation001wb[] = [];
-    //     taskAllocations = await this.taskAllocateRepository.find({ where: { curatorName: username } });
-    //     let taskTanNo = [];
-    //     for (let i = 0; i < taskAllocations.length; i++) {
-    //         taskTanNo.push(taskAllocations[i].curatorTanNo);
-    //     }
-    //     // console.log("taskTanNo", taskTanNo);
+        // let user = [];
+        // user.push(username);
+        // console.log("username findAll-->", user[0]);
+        return await this.ligandRepository.find({where:{status: "In Process",insertUser: username}, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
+    }
 
-    //     let ligands: Ligand001wb[] = [];
-    //     ligands = await this.ligandRepository.find({ where: { tanNumber: In(taskTanNo) } });
-    //     console.log("liands", ligands);
+    async findSubmotToQcStatus(username: any): Promise<Ligand001wb[]> {
 
-    //     let ligandids = [];
-    //     for (let i = 0; i < ligands.length; i++) {
-    //         ligandids.push(ligands[i].ligandId);
-    //     }
-    //     // console.log("ligandids", ligandids);
+        // let user = [];
+        // user.push(username);
+        // console.log("username findAll-->", user[0]);
+        return await this.ligandRepository.find({where:{status: "Submitted to QC",insertUser: username}, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
+    }
 
-    //     let curatorTask: Ligand001wb[] = [];
-    //     curatorTask = await this.ligandRepository.find({ where: { ligandId: In(ligandids) }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
-    //     console.log("curatorTask", curatorTask);
-
-    //     return curatorTask;
-    // }
+    
 
     findOne(id: number): Promise<Ligand001wb> {
         return this.ligandRepository.findOne({ where: { ligandId: id }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
