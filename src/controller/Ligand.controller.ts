@@ -36,11 +36,21 @@ export class LigandController {
 	}
 
 	
-	// @Get('findByCuratorTan/:username')
-	// findByCuratorTan(@Param('username') username: any): Promise<Ligand001wb[]> {
-	// 	// console.log("findall-controller");
-	// 	return this.ligandService.findByCuratorTan(username);
-	// }
+	// @hasRole(Role.Admin,Role.User)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('findInprocesStatus/:username')
+	findInprocesStatus(@Param('username') username: any): Promise<Ligand001wb[]> {
+		// console.log("username findAll-->", username);
+		return this.ligandService.findInprocesStatus(username);
+	}
+
+	// @hasRole(Role.Admin,Role.User)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('findSubmotToQcStatus/:username')
+	findSubmotToQcStatus(@Param('username') username: any): Promise<Ligand001wb[]> {
+		// console.log("username findAll-->", username);
+		return this.ligandService.findSubmotToQcStatus(username);
+	}
 
 	
 	// @hasRole(Role.Admin,Role.User)
