@@ -32,7 +32,7 @@ export class LigandService {
         // let user = [];
         // user.push(username);
         // console.log("username findAll-->", user[0]);
-        return await this.ligandRepository.find({ relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
+        return await this.ligandRepository.find({where: { insertUser: username }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
 
     async findInprocesStatus(username: any): Promise<Ligand001wb[]> {
