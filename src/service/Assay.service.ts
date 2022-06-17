@@ -44,7 +44,7 @@ export class AssayService {
         // let user = [];
         // user.push(username);
         
-        return await this.assayRepository.find({where: { insertUser: username }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+        return await this.assayRepository.find({  where:{insertUser: username},relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
         
     }
 
@@ -71,7 +71,6 @@ export class AssayService {
         let Assays: Assay001wb[] = [];
        
         Assays = await this.assayRepository.find({ where:{insertUser: username}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
-       console.log("Assays",Assays);
        
         return Assays;
         // return await this.assayRepository.find({ where:{status: "In Process",insertUser: username},relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
@@ -85,17 +84,14 @@ export class AssayService {
         for (let i = 0; i < taskAllocations.length; i++) {
             taskTanNo.push(taskAllocations[i].reviewerTanNo);
         }
-        // console.log("taskTanNo", taskTanNo);
 
         let ligands: Ligand001wb[] = [];
         ligands = await this.ligandRepository.find({ where: { tanNumber: In(taskTanNo) } });
-        console.log("liands", ligands);
 
         let ligandids = [];
         for (let i = 0; i < ligands.length; i++) {
             ligandids.push(ligands[i].ligandId);
         }
-        // console.log("ligandids", ligandids);
 
         let Assays: Assay001wb[] = [];
         Assays = await this.assayRepository.find({ where: { ligandSlno2: { ligandId: In(ligandids) } }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });

@@ -20,23 +20,17 @@ export class TaskallocationService {
 
     }
     async create(file: any, taskallocationDTO: TaskallocationDTO): Promise<Taskallocation001wb[]> {
-        // taskallocation001wb.setProperties(taskallocationDTO);
-        // console.log("file----------->>>>", file);
 
         this.taskAllocateRepository.clear();
 
-      
-
+       
+       
         const file2 = await reader.readFile("helloworld.xlsx")
-        // console.log("file2", file2);
 
         const sheet1 = reader.utils.sheet_to_json(file2.Sheets[file2.SheetNames[0]]);
-        // console.log("sheet1", sheet1);
 
 
         let sheet = JSON.parse(JSON.stringify(sheet1).replace(/\s(?=\w+":)/g, ""));
-
-        // console.log("sheet", sheet);
 
         fs.writeFile('helloworld.xlsx', file.buffer, function (err: any) {
             if (err) return console.log(err);
@@ -60,6 +54,7 @@ export class TaskallocationService {
             let random = Math.floor(Math.random() * reviewers.length);
             taskallocation001wb.reviewerName = reviewers[random].username;
             taskallocation001wb.reviewerTanNo = sheet[i].TANNUMBER;
+            taskallocation001wb.rbatchNo = "A1";
             this.taskAllocateRepository.save(taskallocation001wb);
             taskallocation001wbs.push(taskallocation001wb);
         }
