@@ -23,9 +23,8 @@ export class ReportsService {
     async downloadExcel(@Req() request: Request, @Res() response: Response) {
 
         let assays: Assay001wb[] = [];
-        assays = await this.assayRepository.find({ relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+        assays = await this.assayRepository.find({relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2","ligandSlno2", "ligandSlno2.ligandVersionSlno2","ligandSlno2.ligandTypeSlno2","categorySlno2","functionSlno2","originalPrefixSlno2", "typeSlno2"]} );
         for (let i = 0; i < assays.length; i++) {
-            console.log("assays------------>>>>", assays[i]);
         }
         if (assays.length < 0) {
             return;
@@ -1642,14 +1641,14 @@ export class ReportsService {
                 };
 
                 if (assays[i].targetVersion != "" || assays[i].targetVersion != null || assays[i].targetVersion != "NA") {
-                    worksheet.mergeCells('BK' + temp);
-                    worksheet.getCell('BK' + temp).value = assays[i].target;
-                    worksheet.getCell('BK' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                    worksheet.getCell('BK' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+                worksheet.mergeCells('BK' + temp);
+                worksheet.getCell('BK' + temp).value = assays[i].target;
+                worksheet.getCell('BK' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+                worksheet.getCell('BK' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };
+            }
 
                 worksheet.mergeCells('BL' + temp);
                 worksheet.getCell('BL' + temp).value = assays[i].targetVersion;
@@ -1708,7 +1707,7 @@ export class ReportsService {
                 };
 
 
-                // -------------------------------------------Assay-------------------------------------
+    // -------------------------------------------Assay-------------------------------------
 
                 worksheet.mergeCells('Q' + temp);
                 worksheet.getCell('Q' + temp).value = i + 1;
@@ -1719,7 +1718,7 @@ export class ReportsService {
                 };
 
                 worksheet.mergeCells('R' + temp);
-                worksheet.getCell('R' + temp).value = assays[i].ligandSlno2.tanNumber + "-" + (i + 1);
+                worksheet.getCell('R' + temp).value = assays[i].ligandSlno2.tanNumber+"-"+(i + 1);
                 worksheet.getCell('R' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
                 worksheet.getCell('R' + temp).font = {
                     size: 10,
@@ -1727,34 +1726,34 @@ export class ReportsService {
                 };
 
                 if (assays[i].assayTypeSlno2 != null) {
-                    worksheet.mergeCells('S' + temp);
-                    worksheet.getCell('S' + temp).value = assays[i].assayTypeSlno2.assayType;
-                    worksheet.getCell('S' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('S' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+                worksheet.mergeCells('S' + temp);
+                worksheet.getCell('S' + temp).value = assays[i].assayTypeSlno2.assayType;
+                worksheet.getCell('S' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+                worksheet.getCell('S' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };
+            }
 
-                if (assays[i].toxiCitySlno2 != null) {
-                    worksheet.mergeCells('T' + temp);
-                    worksheet.getCell('T' + temp).value = assays[i].toxiCitySlno2.toxiCity;
-                    worksheet.getCell('T' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('T' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+            if (assays[i].toxiCitySlno2 != null) {
+                worksheet.mergeCells('T' + temp);
+                worksheet.getCell('T' + temp).value = assays[i].toxiCitySlno2.toxiCity;
+                worksheet.getCell('T' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+                worksheet.getCell('T' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };
+            }
 
-                if (assays[i].routeSlno2 != null) {
-                    worksheet.mergeCells('U' + temp);
-                    worksheet.getCell('U' + temp).value = assays[i].routeSlno2.route;
-                    worksheet.getCell('U' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('U' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+            if (assays[i].routeSlno2 != null) {
+                worksheet.mergeCells('U' + temp);
+                worksheet.getCell('U' + temp).value = assays[i].routeSlno2.route;
+                worksheet.getCell('U' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+                worksheet.getCell('U' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };
+            }
 
                 worksheet.mergeCells('V' + temp);
                 worksheet.getCell('V' + temp).value = assays[i].administration;
@@ -1773,14 +1772,13 @@ export class ReportsService {
                 };
 
                 if (assays[i].targetVersion != "" || assays[i].targetVersion != null || assays[i].targetVersion != "NA") {
-                    worksheet.mergeCells('X' + temp);
-                    worksheet.getCell('X' + temp).value = assays[i].target;
-                    worksheet.getCell('X' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('X' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+                worksheet.mergeCells('X' + temp);
+                worksheet.getCell('X' + temp).value = assays[i].target;
+                worksheet.getCell('X' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+                worksheet.getCell('X' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };}
 
                 worksheet.mergeCells('Y' + temp);
                 worksheet.getCell('Y' + temp).value = assays[i].ligandSvalue;
@@ -1791,14 +1789,14 @@ export class ReportsService {
                 };
 
                 if (assays[i].unitSlno2 != null) {
-                    worksheet.mergeCells('Z' + temp);
-                    worksheet.getCell('Z' + temp).value = assays[i].unitSlno2.unit;
-                    worksheet.getCell('Z' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('Z' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+                worksheet.mergeCells('Z' + temp);
+                worksheet.getCell('Z' + temp).value = assays[i].unitSlno2.unit;
+                worksheet.getCell('Z' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+                worksheet.getCell('Z' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };
+            }
 
                 worksheet.mergeCells('AA' + temp);
                 worksheet.getCell('AA' + temp).value = assays[i].ligandHvalue;
@@ -1817,14 +1815,14 @@ export class ReportsService {
                 };
 
                 if (assays[i].unitedSlno2 != null) {
-                    worksheet.mergeCells('AC' + temp);
-                    worksheet.getCell('AC' + temp).value = assays[i].unitedSlno2.united;
-                    worksheet.getCell('AC' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('AC' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+                worksheet.mergeCells('AC' + temp);
+                worksheet.getCell('AC' + temp).value = assays[i].unitedSlno2.united;
+                worksheet.getCell('AC' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+                worksheet.getCell('AC' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };
+            }
 
 
                 worksheet.mergeCells('AD' + temp);
@@ -1892,213 +1890,213 @@ export class ReportsService {
                 };
 
 
-                // --------------------------------------Measurement------------------------------
-                if (assays[i].dataLocator1 != null) {
-                    worksheet.mergeCells('AL' + temp);
-                    worksheet.getCell('AL' + temp).value = "Table " + assays[i].dataLocator1;
-                    worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('AL' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+// --------------------------------------Measurement------------------------------
+        if(assays[i].dataLocator1 !=null){
+            worksheet.mergeCells('AL' + temp);
+            worksheet.getCell('AL' + temp).value = assays[i].dataLocator1;
+            worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AL' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
+        }
 
-                if (assays[i].dataLocator2 != null) {
-                    worksheet.mergeCells('AL' + temp);
-                    worksheet.getCell('AL' + temp).value = "Figure "+ assays[i].dataLocator2;
-                    worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('AL' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+        if(assays[i].dataLocator2 !=null){
+            worksheet.mergeCells('AL' + temp);
+            worksheet.getCell('AL' + temp).value = assays[i].dataLocator2;
+            worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AL' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
+        }
 
-                if (assays[i].dataLocator3 != null) {
-                    worksheet.mergeCells('AL' + temp);
-                    worksheet.getCell('AL' + temp).value = "Page " +assays[i].dataLocator3 + " (text)";
-                    worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('AL' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+        if(assays[i].dataLocator3 !=null){
+            worksheet.mergeCells('AL' + temp);
+            worksheet.getCell('AL' + temp).value = assays[i].dataLocator3;
+            worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AL' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
+        }
 
-                if (assays[i].categorySlno2 != null) {
-                    worksheet.mergeCells('AM' + temp);
-                    worksheet.getCell('AM' + temp).value = assays[i].categorySlno2.category;
-                    worksheet.getCell('AM' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('AM' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+        if (assays[i].categorySlno2 != null) {
+            worksheet.mergeCells('AM' + temp);
+            worksheet.getCell('AM' + temp).value = assays[i].categorySlno2.category;
+            worksheet.getCell('AM' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AM' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
+        }
 
-                if (assays[i].functionSlno2 != null) {
-                    worksheet.mergeCells('AN' + temp);
-                    worksheet.getCell('AN' + temp).value = assays[i].functionSlno2.function;
-                    worksheet.getCell('AN' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('AN' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+        if (assays[i].functionSlno2 != null) {
+            worksheet.mergeCells('AN' + temp);
+            worksheet.getCell('AN' + temp).value = assays[i].functionSlno2.function;
+            worksheet.getCell('AN' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AN' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
+        }
 
-                worksheet.mergeCells('AO' + temp);
-                worksheet.getCell('AO' + temp).value = assays[i].parameter;
-                worksheet.getCell('AO' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                worksheet.getCell('AO' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('AO' + temp);
+            worksheet.getCell('AO' + temp).value = assays[i].parameter;
+            worksheet.getCell('AO' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AO' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('AP' + temp);
-                worksheet.getCell('AP' + temp).value = assays[i].parameterDetail;
-                worksheet.getCell('AP' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                worksheet.getCell('AP' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('AP' + temp);
+            worksheet.getCell('AP' + temp).value = assays[i].parameterDetail;
+            worksheet.getCell('AP' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AP' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                if (assays[i].originalPrefixSlno2 != null) {
-                    worksheet.mergeCells('AQ' + temp);
-                    worksheet.getCell('AQ' + temp).value = assays[i].originalPrefixSlno2.originalPrefix;
-                    worksheet.getCell('AQ' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                    worksheet.getCell('AQ' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+            if (assays[i].originalPrefixSlno2 != null) {
+            worksheet.mergeCells('AQ' + temp);
+            worksheet.getCell('AQ' + temp).value = assays[i].originalPrefixSlno2.originalPrefix;
+            worksheet.getCell('AQ' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AQ' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
+        }
 
-                worksheet.mergeCells('AR' + temp);
-                worksheet.getCell('AR' + temp).value = assays[i].singleValue;
-                worksheet.getCell('AR' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                worksheet.getCell('AR' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('AR' + temp);
+            worksheet.getCell('AR' + temp).value = assays[i].singleValue;
+            worksheet.getCell('AR' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AR' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('AS' + temp);
-                worksheet.getCell('AS' + temp).value = assays[i].unit;
-                worksheet.getCell('AS' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                worksheet.getCell('AS' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('AS' + temp);
+            worksheet.getCell('AS' + temp).value = assays[i].unit;
+            worksheet.getCell('AS' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AS' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('AT' + temp);
-                worksheet.getCell('AT' + temp).value = assays[i].highEndValue;
-                worksheet.getCell('AT' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                worksheet.getCell('AT' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('AT' + temp);
+            worksheet.getCell('AT' + temp).value = assays[i].highEndValue;
+            worksheet.getCell('AT' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AT' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('AU' + temp);
-                worksheet.getCell('AU' + temp).value = assays[i].lowEndValue;
-                worksheet.getCell('AU' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                worksheet.getCell('AU' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('AU' + temp);
+            worksheet.getCell('AU' + temp).value = assays[i].lowEndValue;
+            worksheet.getCell('AU' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AU' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('AV' + temp);
-                worksheet.getCell('AV' + temp).value = assays[i].units;
-                worksheet.getCell('AV' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                worksheet.getCell('AV' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('AV' + temp);
+            worksheet.getCell('AV' + temp).value = assays[i].units;
+            worksheet.getCell('AV' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AV' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('AW' + temp);
-                worksheet.getCell('AW' + temp).value = assays[i].nonNumeric;
-                worksheet.getCell('AW' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-                worksheet.getCell('AW' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('AW' + temp);
+            worksheet.getCell('AW' + temp).value = assays[i].nonNumeric;
+            worksheet.getCell('AW' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+            worksheet.getCell('AW' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('AX' + temp);
-                worksheet.getCell('AX' + temp).value = assays[i].remark;
-                worksheet.getCell('AX' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                worksheet.getCell('AX' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('AX' + temp);
+            worksheet.getCell('AX' + temp).value = assays[i].remark;
+            worksheet.getCell('AX' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+            worksheet.getCell('AX' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                if (assays[i].typeSlno2 != null) {
-                    worksheet.mergeCells('AY' + temp);
-                    worksheet.getCell('AY' + temp).value = assays[i].typeSlno2.type;
-                    worksheet.getCell('AY' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                    worksheet.getCell('AY' + temp).font = {
-                        size: 10,
-                        name: 'Calibri',
-                    };
-                }
+            if (assays[i].typeSlno2 != null) {
+            worksheet.mergeCells('AY' + temp);
+            worksheet.getCell('AY' + temp).value = assays[i].typeSlno2.type;
+            worksheet.getCell('AY' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+            worksheet.getCell('AY' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
+        }
 
-                worksheet.mergeCells('AZ' + temp);
-                worksheet.getCell('AZ' + temp).value = assays[i].cell;
-                worksheet.getCell('AZ' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                worksheet.getCell('AZ' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('AZ' + temp);
+            worksheet.getCell('AZ' + temp).value = assays[i].cell;
+            worksheet.getCell('AZ' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+            worksheet.getCell('AZ' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('BA' + temp);
-                worksheet.getCell('BA' + temp).value = assays[i].cellDetail;
-                worksheet.getCell('BA' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                worksheet.getCell('BA' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('BA' + temp);
+            worksheet.getCell('BA' + temp).value = assays[i].cellDetail;
+            worksheet.getCell('BA' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+            worksheet.getCell('BA' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('BB' + temp);
-                worksheet.getCell('BB' + temp).value = assays[i].organ;
-                worksheet.getCell('BB' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                worksheet.getCell('BB' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('BB' + temp);
+            worksheet.getCell('BB' + temp).value = assays[i].organ;
+            worksheet.getCell('BB' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+            worksheet.getCell('BB' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('BC' + temp);
-                worksheet.getCell('BC' + temp).value = assays[i].organDetail;
-                worksheet.getCell('BC' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                worksheet.getCell('BC' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('BC' + temp);
+            worksheet.getCell('BC' + temp).value = assays[i].organDetail;
+            worksheet.getCell('BC' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+            worksheet.getCell('BC' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('BD' + temp);
-                worksheet.getCell('BD' + temp).value = assays[i].species;
-                worksheet.getCell('BD' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                worksheet.getCell('BD' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('BD' + temp);
+            worksheet.getCell('BD' + temp).value = assays[i].species;
+            worksheet.getCell('BD' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+            worksheet.getCell('BD' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('BE' + temp);
-                worksheet.getCell('BE' + temp).value = assays[i].speciesDetail;
-                worksheet.getCell('BE' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                worksheet.getCell('BE' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('BE' + temp);
+            worksheet.getCell('BE' + temp).value = assays[i].speciesDetail;
+            worksheet.getCell('BE' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+            worksheet.getCell('BE' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('BF' + temp);
-                worksheet.getCell('BF' + temp).value = assays[i].gender;
-                worksheet.getCell('BF' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                worksheet.getCell('BF' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
+            worksheet.mergeCells('BF' + temp);
+            worksheet.getCell('BF' + temp).value = assays[i].gender;
+            worksheet.getCell('BF' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+            worksheet.getCell('BF' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
 
-                worksheet.mergeCells('BG' + temp);
-                worksheet.getCell('BG' + temp).value = assays[i].ageGroup;
-                worksheet.getCell('BG' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-                worksheet.getCell('BG' + temp).font = {
-                    size: 10,
-                    name: 'Calibri',
-                };
-            }
+            worksheet.mergeCells('BG' + temp);
+            worksheet.getCell('BG' + temp).value = assays[i].ageGroup;
+            worksheet.getCell('BG' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+            worksheet.getCell('BG' + temp).font = {
+                size: 10,
+                name: 'Calibri',
+            };
+        }
             return workbook.xlsx.write(response).then(function () {
                 response['status'](200).end();
             });
