@@ -19,10 +19,10 @@ export class ReportsController {
     // @hasRole(Role.Reviewer,Role.Admin)
 	@UseGuards(JwtAuthGuard, RolesGuard)
     @Get('excel')
-    @Header("Content-Type",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    @Header("Content-Disposition",
-        "attachment; filename=" + "Attendace Report" + ".xlsx")
+    // @Header("Content-Type",
+    //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    // @Header("Content-Disposition",
+    //     "attachment; filename=" + "Attendace Report" + ".xlsx")
     
     async downloadExcel( @Req() request: Request, @Res() response: Response) {
         return await this.reportsService.downloadExcel( request, response);
