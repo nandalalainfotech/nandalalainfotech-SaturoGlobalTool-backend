@@ -26,7 +26,7 @@ export class AssayController {
 		return this.assayService.update(assayDTO);
 	}
 
-	
+
 
 	// @hasRole(Role.Admin,Role.User)
 	// @UseGuards(JwtAuthGuard, RolesGuard)
@@ -36,13 +36,13 @@ export class AssayController {
 		return this.assayService.findAll(username);
 	}
 
-// @hasRole(Role.Admin,Role.User)
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Get('findInprocesStatus/:username')
-findInprocesStatus(@Param('username') username: any): Promise<Assay001wb[]> {
-	// console.log("username findAll-->", username);
-	return this.assayService.findInprocesStatus(username);
-}
+	// @hasRole(Role.Admin,Role.User)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('findInprocesStatus/:username')
+	findInprocesStatus(@Param('username') username: any): Promise<Assay001wb[]> {
+		// console.log("username findAll-->", username);
+		return this.assayService.findInprocesStatus(username);
+	}
 
 	// @hasRole(Role.Admin,Role.User)
 	// @UseGuards(JwtAuthGuard, RolesGuard)
@@ -52,8 +52,8 @@ findInprocesStatus(@Param('username') username: any): Promise<Assay001wb[]> {
 		return this.assayService.findByReviewer(username);
 	}
 
-	
-	
+
+
 	// @Get('findByCuratorTan/:username')
 	// findByCuratorTan(@Param('username') username: any): Promise<Assay001wb[]> {
 	// 	// console.log("findall-controller");

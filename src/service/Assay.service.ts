@@ -50,29 +50,11 @@ export class AssayService {
 
     async findInprocesStatus(username: any): Promise<Assay001wb[]> {
 
-        // let taskAllocations: Assay001wb[] = [];
-        // taskAllocations = await this.assayRepository.find({ where: { status: "In Process" } });
-        // let taskTanNo = [];
-        // for (let i = 0; i < taskAllocations.length; i++) {
-        //     taskTanNo.push(taskAllocations[i].status);
-        // }
-
-        let ligands: Ligand001wb[] = [];
-        // ligands  = await this.ligandRepository.find({ relations: ["ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs"] });
-        ligands = await this.ligandRepository.find({ where: { status: "In Process"} });
-        // console.log("ligands", ligands);
-
-        let ligandids = [];
-        for (let i = 0; i < ligands.length; i++) {
-            ligandids.push(ligands[i].ligandId);
-        }
-        // console.log("Status", ligandids);
-
-        let Assays: Assay001wb[] = [];
+        // let Assays: Assay001wb[] = [];
        
-        Assays = await this.assayRepository.find({ where:{insertUser: username}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+        // Assays = await this.assayRepository.find({ where:{insertUser: username}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
        
-        return Assays;
+        return await this.assayRepository.find({ where:{insertUser: username}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
         // return await this.assayRepository.find({ where:{status: "In Process",insertUser: username},relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
     }
 

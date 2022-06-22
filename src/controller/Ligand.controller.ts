@@ -31,7 +31,6 @@ export class LigandController {
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findAll/:username')
 	findAll(@Param('username') username: any): Promise<Ligand001wb[]> {
-		// console.log("username findAll-->", username);
 		return this.ligandService.findAll(username);
 	}
 
