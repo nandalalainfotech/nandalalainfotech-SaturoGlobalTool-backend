@@ -32,7 +32,12 @@ export class LigandService {
         // let user = [];
         // user.push(username);
         // console.log("username findAll-->", user[0]);
-        return await this.ligandRepository.find({where: { insertUser: username }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
+        return await this.ligandRepository.find({
+            relations: [
+                "ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
+                "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
+                "assay001wbs.categorySlno2", "assay001wbs.functionSlno2", "assay001wbs.originalPrefixSlno2", "assay001wbs.typeSlno2"]
+        });
     }
 
     async findInprocesStatus(username: any): Promise<Ligand001wb[]> {
@@ -40,7 +45,7 @@ export class LigandService {
         // let user = [];
         // user.push(username);
         // console.log("username findAll-->", user[0]);
-        return await this.ligandRepository.find({where:{status: "In Process",insertUser: username}, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
+        return await this.ligandRepository.find({ where: { status: "In Process", insertUser: username }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
 
     async findSubmotToQcStatus(username: any): Promise<Ligand001wb[]> {
@@ -48,10 +53,10 @@ export class LigandService {
         // let user = [];
         // user.push(username);
         // console.log("username findAll-->", user[0]);
-        return await this.ligandRepository.find({where:{status: "Submitted to QC",insertUser: username}, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
+        return await this.ligandRepository.find({ where: { status: "Submitted to QC", insertUser: username }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
 
-    
+
 
     findOne(id: number): Promise<Ligand001wb> {
         return this.ligandRepository.findOne({ where: { ligandId: id }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });

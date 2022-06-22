@@ -20,23 +20,18 @@ export class TaskallocationService {
 
     }
     async create(file: any, taskallocationDTO: TaskallocationDTO): Promise<Taskallocation001wb[]> {
-
         this.taskAllocateRepository.clear();
-
-       
-       
-        const file2 = await reader.readFile("helloworld.xlsx")
-
-        const sheet1 = reader.utils.sheet_to_json(file2.Sheets[file2.SheetNames[0]]);
-
-
-        let sheet = JSON.parse(JSON.stringify(sheet1).replace(/\s(?=\w+":)/g, ""));
-
-        fs.writeFile('helloworld.xlsx', file.buffer, function (err: any) {
+        await fs.promises.writeFile('./uploads/helloworld.xlsx', file.buffer, function (err: any) {
             if (err) return console.log(err);
-
         });
+        return this.createTaskAllocation(taskallocationDTO);
+    }
 
+    async createTaskAllocation(taskallocationDTO: TaskallocationDTO): Promise<Taskallocation001wb[]> {
+        const file2 = await reader.readFile("./uploads/helloworld.xlsx");
+        console.log("file2", file2);
+        const sheet1 = reader.utils.sheet_to_json(file2.Sheets[file2.SheetNames[0]]);
+        let sheet = JSON.parse(JSON.stringify(sheet1).replace(/\s(?=\w+":)/g, ""));
         let taskallocation001wbs: Taskallocation001wb[] = [];
         let reviewers: User001mb[] = [];
         reviewers = await this.userRepository.find({ relations: ["person", "role"], where: { roleid: 3 } });
@@ -44,26 +39,21 @@ export class TaskallocationService {
             const taskallocation001wb = new Taskallocation001wb();
             taskallocation001wb.curatorId = i + 1;
             taskallocation001wb.curatorName = sheet[i].CURATORNAME;
-            taskallocation001wb.cbatchNo = "B1";
+            taskallocation001wb.cbatchNo = "A1";
             taskallocation001wb.curatorTanNo = sheet[i].TANNUMBER;
-            taskallocation001wb.curatorAllocateDate = new Date();
+            taskallocation001wb.curatorAllocateDate = sheet[i].curatorAllocateDate;
             taskallocation001wb.insertUser = taskallocationDTO.insertUser;
             taskallocation001wb.insertDatetime = taskallocationDTO.insertDatetime;
-
 
             let random = Math.floor(Math.random() * reviewers.length);
             taskallocation001wb.reviewerName = reviewers[random].username;
             taskallocation001wb.reviewerTanNo = sheet[i].TANNUMBER;
-            taskallocation001wb.rbatchNo = "A1";
+            taskallocation001wb.rbatchNo = "";
             this.taskAllocateRepository.save(taskallocation001wb);
             taskallocation001wbs.push(taskallocation001wb);
         }
-
         return taskallocation001wbs;
-
     }
-
-
 
 
 
@@ -80,6 +70,10 @@ export class TaskallocationService {
 
     async findByTanNo(username: any): Promise<Taskallocation001wb[]> {
         return await this.taskAllocateRepository.find({ where: { curatorName: username } });
+    }
+
+    async findByReviewerTanNo(username: any): Promise<Taskallocation001wb[]> {
+        return await this.taskAllocateRepository.find({ where: { reviewerName: username } });
     }
 
     findOne(curatorId: number): Promise<Taskallocation001wb> {
