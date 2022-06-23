@@ -29,7 +29,6 @@ export class TaskallocationService {
 
     async createTaskAllocation(taskallocationDTO: TaskallocationDTO): Promise<Taskallocation001wb[]> {
         const file2 = await reader.readFile("./uploads/helloworld.xlsx");
-        console.log("file2", file2);
         const sheet1 = reader.utils.sheet_to_json(file2.Sheets[file2.SheetNames[0]]);
         let sheet = JSON.parse(JSON.stringify(sheet1).replace(/\s(?=\w+":)/g, ""));
         let taskallocation001wbs: Taskallocation001wb[] = [];
