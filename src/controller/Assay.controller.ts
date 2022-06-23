@@ -32,7 +32,6 @@ export class AssayController {
 	// @UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findAll/:username')
 	findAll(@Param('username') username: any): Promise<Assay001wb[]> {
-		// console.log("findall-controller");
 		return this.assayService.findAll(username);
 	}
 
@@ -40,7 +39,6 @@ export class AssayController {
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findInprocesStatus/:username')
 	findInprocesStatus(@Param('username') username: any): Promise<Assay001wb[]> {
-		// console.log("username findAll-->", username);
 		return this.assayService.findInprocesStatus(username);
 	}
 
@@ -48,7 +46,6 @@ export class AssayController {
 	// @UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findByReviewer/:username')
 	findByReviewer(@Param('username') username: any): Promise<Assay001wb[]> {
-		// console.log("findall-controller");
 		return this.assayService.findByReviewer(username);
 	}
 
@@ -56,7 +53,6 @@ export class AssayController {
 
 	// @Get('findByCuratorTan/:username')
 	// findByCuratorTan(@Param('username') username: any): Promise<Assay001wb[]> {
-	// 	// console.log("findall-controller");
 	// 	return this.assayService.findByCuratorTan(username);
 	// }
 
@@ -73,7 +69,7 @@ export class AssayController {
 	// @hasRole(Role.Admin,Role.User)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get(':id')
-	findOne(@Param('id') id: number): Promise<Assay001wb> {
+	findOne(@Param('id') id: number | any): Promise<Assay001wb> {
 		return this.assayService.findOne(id);
 	}
 }

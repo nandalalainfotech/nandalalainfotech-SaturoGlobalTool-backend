@@ -20,15 +20,15 @@ export class LigandController {
 
 	
 	// @hasRole(Role.Admin,Role.User)
-	@UseGuards(JwtAuthGuard, RolesGuard)
-	@Put("update")
-	update(@Body() ligandDTO: LigandDTO): Promise<Ligand001wb> {
-		return this.ligandService.update(ligandDTO);
-	}
+
 
 	
 	// @hasRole(Role.Admin,Role.User)
-	@UseGuards(JwtAuthGuard, RolesGuard)
+		@UseGuards(JwtAuthGuard, RolesGuard)
+	@Put("update")
+	update(@Body() ligandDTO: LigandDTO): Promise<Ligand001wb> {
+		return this.ligandService.update(ligandDTO);
+	}@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findAll/:username')
 	findAll(@Param('username') username: any): Promise<Ligand001wb[]> {
 		return this.ligandService.findAll(username);
@@ -39,7 +39,6 @@ export class LigandController {
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findInprocesStatus/:username')
 	findInprocesStatus(@Param('username') username: any): Promise<Ligand001wb[]> {
-		// console.log("username findAll-->", username);
 		return this.ligandService.findInprocesStatus(username);
 	}
 
@@ -47,7 +46,6 @@ export class LigandController {
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findSubmotToQcStatus/:username')
 	findSubmotToQcStatus(@Param('username') username: any): Promise<Ligand001wb[]> {
-		// console.log("username findAll-->", username);
 		return this.ligandService.findSubmotToQcStatus(username);
 	}
 
@@ -65,5 +63,17 @@ export class LigandController {
 	@Get(':id')
 	findOne(@Param('id') id: number): Promise<Ligand001wb> {
 		return this.ligandService.findOne(id);
+	}
+
+	// @UseGuards(JwtAuthGuard, RolesGuard)
+	// @Put('updateStatus/:tanNumber')
+	// updateStatus(@Param('tanNumber') tanNumber: any): Promise<Ligand001wb> {
+	// 	return this.ligandService.updateStatus(tanNumber);
+	// }
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Put('updateStatus/:ligandId/:tanNumber')
+	updateStatus(@Param('ligandId') ligandId: any,@Param('tanNumber') tanNumber: any): Promise<Ligand001wb> {
+		
+		return this.ligandService.updateStatus(ligandId, tanNumber);
 	}
 }

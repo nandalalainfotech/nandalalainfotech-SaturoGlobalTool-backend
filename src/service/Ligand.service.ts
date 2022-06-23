@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LigandDTO } from "src/dto/Ligand.dto";
+import { Assay001wb } from "src/entity/Assay001wb";
 import { Ligand001wb } from "src/entity/Ligand001wb";
 import { Taskallocation001wb } from "src/entity/Taskallocation001wb";
 import { User001mb } from "src/entity/User001mb";
@@ -12,13 +13,20 @@ export class LigandService {
     constructor(
         @InjectRepository(User001mb) private readonly userRepository: Repository<User001mb>,
         @InjectRepository(Taskallocation001wb) private readonly taskAllocateRepository: Repository<Taskallocation001wb>,
-        @InjectRepository(Ligand001wb) private readonly ligandRepository: Repository<Ligand001wb>) {
+        @InjectRepository(Ligand001wb) private readonly ligandRepository: Repository<Ligand001wb>,
+        @InjectRepository(Assay001wb) private readonly assayRepository: Repository<Assay001wb>,) {
 
     }
     async create(ligandDTO: LigandDTO): Promise<Ligand001wb> {
-        const ligand001wb = new Ligand001wb();
-        ligand001wb.setProperties(ligandDTO);
-        return this.ligandRepository.save(ligand001wb);
+        const ligand001wb = await this.ligandRepository.findOne({where: { tanNumber: ligandDTO.tanNumber }});
+        if (ligand001wb && ligand001wb.status == "Submitted to QC") {
+            throw new HttpException('Already Found!', HttpStatus.BAD_REQUEST);
+        } else {
+            const ligand001wbNew = new Ligand001wb();
+            ligand001wbNew.setProperties(ligandDTO);
+            return this.ligandRepository.save(ligand001wbNew);
+        }
+
     }
     async update(ligandDTO: LigandDTO): Promise<Ligand001wb> {
         const ligand001wb = new Ligand001wb();
@@ -28,10 +36,6 @@ export class LigandService {
     }
 
     async findAll(username: any): Promise<Ligand001wb[]> {
-
-        // let user = [];
-        // user.push(username);
-        // console.log("username findAll-->", user[0]);
         return await this.ligandRepository.find({
             relations: [
                 "ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
@@ -41,18 +45,10 @@ export class LigandService {
     }
 
     async findInprocesStatus(username: any): Promise<Ligand001wb[]> {
-
-        // let user = [];
-        // user.push(username);
-        // console.log("username findAll-->", user[0]);
         return await this.ligandRepository.find({ where: { status: "In Process", insertUser: username }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
 
     async findSubmotToQcStatus(username: any): Promise<Ligand001wb[]> {
-
-        // let user = [];
-        // user.push(username);
-        // console.log("username findAll-->", user[0]);
         return await this.ligandRepository.find({ where: { status: "Submitted to QC", insertUser: username }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
 
@@ -61,6 +57,24 @@ export class LigandService {
     findOne(id: number): Promise<Ligand001wb> {
         return this.ligandRepository.findOne({ where: { ligandId: id }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
+
+    async updateStatus(ligandId: any, tanNumber: any): Promise<Ligand001wb> {
+        const ligand001wbUpdate = new Ligand001wb();
+        ligand001wbUpdate.status = "Submitted to QC";
+        const ligand001wb = await this.ligandRepository.findOne({
+            where: { ligandId: ligandId, tanNumber: tanNumber }, relations: ["ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
+                "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
+                "assay001wbs.categorySlno2", "assay001wbs.functionSlno2", "assay001wbs.originalPrefixSlno2", "assay001wbs.typeSlno2"]
+        });
+        await this.ligandRepository.save({ ...ligand001wb, ...ligand001wbUpdate });
+        for (let assay of ligand001wb.assay001wbs) {
+            let newAssas = new Assay001wb();
+            newAssas.status = "Submitted to QC";
+            await this.assayRepository.save({ ...assay, ...newAssas });
+        }
+        return ligand001wb;
+    }
+
     async remove(ligandId: number): Promise<void> {
         await this.ligandRepository.delete(ligandId);
     }

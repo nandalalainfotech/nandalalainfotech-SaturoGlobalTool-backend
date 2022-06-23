@@ -17,7 +17,6 @@ export class AssayService {
 
     }
     async create(assayDTO: AssayDTO): Promise<Assay001wb> {
-        // console.log("assayDTO", assayDTO);
         const assay001wb = new Assay001wb();
         assay001wb.setProperties(assayDTO);
         if (assay001wb.targetVersion == "" || assay001wb.targetVersion == null || assay001wb.targetVersion == "NA") {
@@ -43,18 +42,18 @@ export class AssayService {
 
         // let user = [];
         // user.push(username);
-        
-        return await this.assayRepository.find({  where:{insertUser: username},relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
-        
+
+        return await this.assayRepository.find({ where: { insertUser: username }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+
     }
 
     async findInprocesStatus(username: any): Promise<Assay001wb[]> {
 
         // let Assays: Assay001wb[] = [];
-       
+
         // Assays = await this.assayRepository.find({ where:{insertUser: username}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
-       
-        return await this.assayRepository.find({ where:{insertUser: username}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+
+        return await this.assayRepository.find({ where: { insertUser: username }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
         // return await this.assayRepository.find({ where:{status: "In Process",insertUser: username},relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
     }
 
@@ -80,34 +79,38 @@ export class AssayService {
         return Assays;
     }
 
-    // async findByCuratorTan(username: any): Promise<Assay001wb[]> {
 
-    //     let taskAllocations: Taskallocation001wb[] = [];
-    //     taskAllocations = await this.taskAllocateRepository.find({ where: { curatorName: username } });
-    //     let taskTanNo = [];
-    //     for (let i = 0; i < taskAllocations.length; i++) {
-    //         taskTanNo.push(taskAllocations[i].curatorTanNo);
-    //     }
-    //     // console.log("taskTanNo", taskTanNo);
 
-    //     let ligands: Ligand001wb[] = [];
-    //     ligands = await this.ligandRepository.find({ where: { tanNumber: In(taskTanNo) } });
-    //     console.log("liands", ligands);
+    async findOne(id: number | any): Promise<Assay001wb> {
 
-    //     let ligandids = [];
-    //     for (let i = 0; i < ligands.length; i++) {
-    //         ligandids.push(ligands[i].ligandId);
-    //     }
-    //     // console.log("ligandids", ligandids);
+        let Assays: Assay001wb[] = [];
+        let AssaysTanNumbers: Assay001wb[] = [];
+       
+        Assays = await this.assayRepository.find({ relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+        for (let i = 0; i < Assays.length; i++) {
 
-    //    let CuratorTask: Assay001wb[] = [];
-    //    CuratorTask = await this.assayRepository.find({where:{ligandSlno2:{ligandId: In(ligandids)}}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
-    //     return CuratorTask;
-    // }
+            if (Assays[i].ligandSlno2.tanNumber == id) {
+                AssaysTanNumbers.push(Assays[i]);
+            }
+        }
+        let assay001wbs: Assay001wb[] = [];
 
-    findOne(id: number): Promise<Assay001wb> {
-        return this.assayRepository.findOne(id);
+       
+
+       let assayIds=[];
+          for(let i=0;i<AssaysTanNumbers.length;i++) {
+            assayIds.push(AssaysTanNumbers[i].assayId)
+            // assay001wbs = await this.assayRepository.update({where:{assayId:AssaysTanNumbers[i].assayId}});
+        }
+        const assay001wb = new Assay001wb();
+        assay001wb.status= "Submitted to Qc";
+
+      await this.assayRepository.update( { assayId: In(assayIds)},assay001wb);
+        
+        return assay001wb;
+        // return this.assayRepository.findOne(id);
     }
+
     async remove(assayId: number): Promise<void> {
         await this.assayRepository.delete(assayId);
     }
