@@ -25,7 +25,7 @@ export class ReportsService {
 
         let assays: Assay001wb[] = [];
         assays = await this.assayRepository.find({ relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
-        console.log("assays", assays);
+        // console.log("assays", assays);
         if (assays.length < 0) {
             return;
         }
@@ -39,7 +39,7 @@ export class ReportsService {
             worksheet = await ReportHeader(workbook);
             for (let i = 0; i < assays.length; i++) {
                 let tempTan = (i == 0) ? 0 : (i != 0) ? (i - 1) : 0;
-                console.log("testing",i, tempTan, assays[tempTan].ligandSlno2.tanNumber, assays[i].ligandSlno2.tanNumber, assays[tempTan].ligandSlno2.tanNumber == assays[i].ligandSlno2.tanNumber )
+                // console.log("testing",i, tempTan, assays[tempTan].ligandSlno2.tanNumber, assays[i].ligandSlno2.tanNumber, assays[tempTan].ligandSlno2.tanNumber == assays[i].ligandSlno2.tanNumber )
                 if (assays[tempTan].ligandSlno2.tanNumber == assays[i].ligandSlno2.tanNumber) {
                     let assaycount = assays[i];
                     await ReportData(worksheet, initRow, assaycount, i);
@@ -118,7 +118,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         name: 'Calibri',
     };
 
-
+    if (assaycount.ligandSlno2.ligandTypeSlno2.ligandtype != null) {
     worksheet.mergeCells('F' + temp);
     worksheet.getCell('F' + temp).value = assaycount.ligandSlno2.ligandTypeSlno2.ligandtype;
     worksheet.getCell('F' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
@@ -126,6 +126,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         size: 10,
         name: 'Calibri',
     };
+   }
 
     worksheet.mergeCells('G' + temp);
     worksheet.getCell('G' + temp).value = assaycount.ligandSlno2.identifier1;
@@ -450,6 +451,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         name: 'Calibri',
     };
 
+    if (assaycount.singleUnit != null) {
     worksheet.mergeCells('AH' + temp);
     worksheet.getCell('AH' + temp).value = assaycount.singleUnit;
     worksheet.getCell('AH' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
@@ -457,6 +459,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         size: 10,
         name: 'Calibri',
     };
+  }
 
     worksheet.mergeCells('AI' + temp);
     worksheet.getCell('AI' + temp).value = assaycount.highCondition;
@@ -474,6 +477,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         name: 'Calibri',
     };
 
+    if (assaycount.highLowUnit != null) {
     worksheet.mergeCells('AK' + temp);
     worksheet.getCell('AK' + temp).value = assaycount.highLowUnit;
     worksheet.getCell('AK' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
@@ -481,6 +485,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         size: 10,
         name: 'Calibri',
     };
+    }
 
 
     // --------------------------------------Measurement------------------------------
@@ -674,6 +679,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         name: 'Calibri',
     };
 
+    if (assaycount.gender != null) {
     worksheet.mergeCells('BF' + temp);
     worksheet.getCell('BF' + temp).value = assaycount.gender;
     worksheet.getCell('BF' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
@@ -681,6 +687,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         size: 10,
         name: 'Calibri',
     };
+   }
 
     worksheet.mergeCells('BG' + temp);
     worksheet.getCell('BG' + temp).value = assaycount.ageGroup;

@@ -36,7 +36,7 @@ export class LigandService {
     }
 
     async findAll(username: any): Promise<Ligand001wb[]> {
-        return await this.ligandRepository.find({
+        return await this.ligandRepository.find({ where: { insertUser: username },
             relations: [
                 "ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
                 "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
