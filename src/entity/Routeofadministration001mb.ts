@@ -29,7 +29,7 @@ export class Routeofadministration001mb {
 
   setProperties(routeOfAdministartionDTO: RouteOfAdministartionDTO) {
     this.id = routeOfAdministartionDTO.id;
-    this.route = routeOfAdministartionDTO.route;
+    this.route = escape(routeOfAdministartionDTO.route);
     this.insertUser = routeOfAdministartionDTO.insertUser;
     this.insertDatetime = routeOfAdministartionDTO.insertDatetime;
     this.updatedUser = routeOfAdministartionDTO.updatedUser;

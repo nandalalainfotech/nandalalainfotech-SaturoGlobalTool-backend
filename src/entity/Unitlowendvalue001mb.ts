@@ -28,7 +28,7 @@ export class Unitlowendvalue001mb {
 
   setProperties(unitlowendvalueDTO: UnitlowendvalueDTO) {
     this.id = unitlowendvalueDTO.id;
-    this.united = unitlowendvalueDTO.united;
+    this.united = escape(unitlowendvalueDTO.united);
     this.insertUser = unitlowendvalueDTO.insertUser;
     this.insertDatetime = unitlowendvalueDTO.insertDatetime;
     this.updatedUser = unitlowendvalueDTO.updatedUser;

@@ -24,7 +24,12 @@ export class LigandVersionService {
     }
 
     async findAll(): Promise<Ligandversion001mb[]> {
-        return await this.ligandversionRepository.find();
+        let ligandversion001mbs : Ligandversion001mb[] = [];
+        ligandversion001mbs = await this.ligandversionRepository.find();
+        for(let ligandversion001mb of ligandversion001mbs) {
+            ligandversion001mb.ligandVersion = unescape( ligandversion001mb.ligandVersion);
+        }
+        return ligandversion001mbs;
     }
 
     findOne(id: number): Promise<Ligandversion001mb> {

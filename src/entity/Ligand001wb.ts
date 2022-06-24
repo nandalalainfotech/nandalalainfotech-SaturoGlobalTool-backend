@@ -133,23 +133,23 @@ export class Ligand001wb {
 
   setProperties(ligandDTO: LigandDTO) {
     this.ligandId = ligandDTO.ligandId;
-    this.tanNumber = ligandDTO.tanNumber;
+    this.tanNumber = escape(ligandDTO.tanNumber);
     this.ligandUri = ligandDTO.ligandUri;
     this.ligandVersionSlno = ligandDTO.ligandVersionSlno;
     this.ligandStatus = ligandDTO.ligandStatus;
     this.collection = ligandDTO.collection;
     this.ligandTypeSlno = ligandDTO.ligandTypeSlno;
-    this.ligandDetail = ligandDTO.ligandDetail;
-    this.identifier1 = ligandDTO.identifier1;
-    this.identifier2 = ligandDTO.identifier2;
-    this.identifier3 = ligandDTO.identifier3;
-    this.collectionId = ligandDTO.collectionId;
-    this.locator = ligandDTO.locator;
+    this.ligandDetail = escape(ligandDTO.ligandDetail);
+    this.identifier1 = escape(ligandDTO.identifier1);
+    this.identifier2 = escape(ligandDTO.identifier2);
+    this.identifier3 = escape(ligandDTO.identifier3);
+    this.collectionId = escape(ligandDTO.collectionId);
+    this.locator = escape(ligandDTO.locator);
     this.sourceType = ligandDTO.sourceType;
     this.citation = ligandDTO.citation;
-    this.diseaseName1 = ligandDTO.diseaseName1;
-    this.diseaseName2 = ligandDTO.diseaseName2;
-    this.diseaseName3 = ligandDTO.diseaseName3;
+    this.diseaseName1 = escape(ligandDTO.diseaseName1);
+    this.diseaseName2 = escape(ligandDTO.diseaseName2);
+    this.diseaseName3 = escape(ligandDTO.diseaseName3);
     this.target = ligandDTO.target;
     this.targetVersion = ligandDTO.targetVersion;
     this.targetStatus = ligandDTO.targetStatus;
@@ -163,5 +163,5 @@ export class Ligand001wb {
     this.insertDatetime = ligandDTO.insertDatetime;
     this.updatedUser = ligandDTO.updatedUser;
     this.updatedDatetime = ligandDTO.updatedDatetime;
-}
+  }
 }

@@ -35,7 +35,7 @@ export class Originalprefix001mb {
 
   setProperties(originalPrefixDTO: OriginalPrefixDTO) {
     this.id = originalPrefixDTO.id;
-    this.originalPrefix = originalPrefixDTO.originalPrefix;
+    this.originalPrefix = escape(originalPrefixDTO.originalPrefix);
     this.insertUser = originalPrefixDTO.insertUser;
     this.insertDatetime = originalPrefixDTO.insertDatetime;
     this.updatedUser = originalPrefixDTO.updatedUser;

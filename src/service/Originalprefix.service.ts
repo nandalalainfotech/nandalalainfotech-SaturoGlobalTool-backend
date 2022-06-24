@@ -24,7 +24,12 @@ export class OriginalPrefixService {
     }
 
     async findAll(): Promise<Originalprefix001mb[]> {
-        return await this.originalprefixRepository.find();
+        let originalprefix001mbs: Originalprefix001mb[] = [];
+        originalprefix001mbs = await this.originalprefixRepository.find();
+        for(let originalprefix001mb of originalprefix001mbs) {
+            originalprefix001mb.originalPrefix = unescape( originalprefix001mb.originalPrefix);
+        }
+        return originalprefix001mbs;
     }
 
     findOne(id: number): Promise<Originalprefix001mb> {

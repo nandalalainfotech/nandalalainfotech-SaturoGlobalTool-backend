@@ -24,7 +24,12 @@ export class RouteOfAdministartionService {
     }
 
     async findAll(): Promise<Routeofadministration001mb[]> {
-        return await this.routeofadministration.find();
+        let routeofadministration001mbs: Routeofadministration001mb[] = [];
+        routeofadministration001mbs = await this.routeofadministration.find();
+        for(let routeofadministration001mb of routeofadministration001mbs) {
+            routeofadministration001mb.route = unescape( routeofadministration001mb.route);
+        }
+        return routeofadministration001mbs;
     }
 
     findOne(id: number): Promise<Routeofadministration001mb> {

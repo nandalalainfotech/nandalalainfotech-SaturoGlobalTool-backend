@@ -24,7 +24,12 @@ export class LigandTypeService {
     }
 
     async findAll(): Promise<Ligandtype001mb[]> {
-        return await this.ligandtypeRepository.find();
+        let ligandtype001mbs: Ligandtype001mb[] = [];
+        ligandtype001mbs = await this.ligandtypeRepository.find();
+        for(let ligandtype001mb of ligandtype001mbs) {
+            ligandtype001mb.ligandtype = unescape( ligandtype001mb.ligandtype);
+        }
+        return ligandtype001mbs;
     }
 
     findOne(id: number): Promise<Ligandtype001mb> {

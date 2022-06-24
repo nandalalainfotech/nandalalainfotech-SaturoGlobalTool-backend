@@ -18,7 +18,7 @@ export class LigandService {
 
     }
     async create(ligandDTO: LigandDTO): Promise<Ligand001wb> {
-        const ligand001wb = await this.ligandRepository.findOne({where: { tanNumber: ligandDTO.tanNumber }});
+        const ligand001wb = await this.ligandRepository.findOne({ where: { tanNumber: ligandDTO.tanNumber } });
         if (ligand001wb && ligand001wb.status == "Submitted to QC") {
             throw new HttpException('Already Found!', HttpStatus.BAD_REQUEST);
         } else {
@@ -36,12 +36,28 @@ export class LigandService {
     }
 
     async findAll(username: any): Promise<Ligand001wb[]> {
-        return await this.ligandRepository.find({ where: { insertUser: username },
+        let ligand001wbs: Ligand001wb[] = [];
+        ligand001wbs = await this.ligandRepository.find({
+            where: { insertUser: username },
             relations: [
                 "ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
                 "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
                 "assay001wbs.categorySlno2", "assay001wbs.functionSlno2", "assay001wbs.originalPrefixSlno2", "assay001wbs.typeSlno2"]
         });
+        for (let ligand001wb of ligand001wbs) {
+            ligand001wb.tanNumber = unescape(ligand001wb.tanNumber)
+            ligand001wb.tanNumber = unescape(ligand001wb.tanNumber)
+            ligand001wb.identifier1 = unescape(ligand001wb.identifier1)
+            ligand001wb.identifier2 = unescape(ligand001wb.identifier2)
+            ligand001wb.identifier3 = unescape(ligand001wb.identifier3)
+            ligand001wb.collectionId = unescape(ligand001wb.collectionId)
+            ligand001wb.locator = unescape(ligand001wb.locator)
+            ligand001wb.ligandDetail = unescape(ligand001wb.ligandDetail)
+            ligand001wb.diseaseName1 = unescape(ligand001wb.diseaseName1)
+            ligand001wb.diseaseName2 = unescape(ligand001wb.diseaseName2)
+            ligand001wb.diseaseName3 = unescape(ligand001wb.diseaseName3)
+        }
+        return ligand001wbs;
     }
 
     async findInprocesStatus(username: any): Promise<Ligand001wb[]> {
