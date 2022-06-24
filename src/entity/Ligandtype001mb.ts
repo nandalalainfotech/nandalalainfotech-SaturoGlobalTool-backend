@@ -28,7 +28,7 @@ export class Ligandtype001mb {
 
   setProperties(ligandTypeDTO: LigandTypeDTO) {
     this.id = ligandTypeDTO.id;
-    this.ligandtype = ligandTypeDTO.ligandtype;
+    this.ligandtype = escape(ligandTypeDTO.ligandtype);
     this.insertUser = ligandTypeDTO.insertUser;
     this.insertDatetime = ligandTypeDTO.insertDatetime;
     this.updatedUser = ligandTypeDTO.updatedUser;

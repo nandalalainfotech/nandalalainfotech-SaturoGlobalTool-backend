@@ -32,7 +32,7 @@ export class Ligandversion001mb {
 
   setProperties(ligandVersionDTO: LigandVersionDTO) {
     this.id = ligandVersionDTO.id;
-    this.ligandVersion = ligandVersionDTO.ligandVersion;
+    this.ligandVersion = escape(ligandVersionDTO.ligandVersion);
     this.insertUser = ligandVersionDTO.insertUser;
     this.insertDatetime = ligandVersionDTO.insertDatetime;
     this.updatedUser = ligandVersionDTO.updatedUser;

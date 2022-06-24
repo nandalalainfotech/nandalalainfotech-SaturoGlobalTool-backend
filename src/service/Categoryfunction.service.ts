@@ -24,7 +24,12 @@ export class CategoryFunctionService {
     }
 
     async findAll(): Promise<Categoryfunction001mb[]> {
-        return await this.categoryFunctionRepository.find();
+        let categoryfunction001mbs: Categoryfunction001mb[] = [];
+        categoryfunction001mbs = await this.categoryFunctionRepository.find();
+        for(let categoryfunction001mb of categoryfunction001mbs) {
+            categoryfunction001mb.function = unescape( categoryfunction001mb.function);
+        }
+        return categoryfunction001mbs;
     }
 
     findOne(id: number): Promise<Categoryfunction001mb> {

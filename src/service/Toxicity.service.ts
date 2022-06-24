@@ -24,7 +24,12 @@ export class ToxicityService {
     }
 
     async findAll(): Promise<Toxicity001mb[]> {
-        return await this.toxicityRepository.find();
+        let toxicity001mbs: Toxicity001mb[] = [];
+        toxicity001mbs = await this.toxicityRepository.find();
+        for(let toxicity001mb of toxicity001mbs) {
+            toxicity001mb.toxiCity = unescape( toxicity001mb.toxiCity);
+        }
+        return toxicity001mbs;
     }
 
     findOne(id: number): Promise<Toxicity001mb> {

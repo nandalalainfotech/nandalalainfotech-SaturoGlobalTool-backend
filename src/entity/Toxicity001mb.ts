@@ -28,7 +28,7 @@ export class Toxicity001mb {
 
   setProperties(toxicityDTO: ToxicityDTO) {
     this.id = toxicityDTO.id;
-    this.toxiCity = toxicityDTO.toxiCity;
+    this.toxiCity = escape(toxicityDTO.toxiCity);
     this.insertUser = toxicityDTO.insertUser;
     this.insertDatetime = toxicityDTO.insertDatetime;
     this.updatedUser = toxicityDTO.updatedUser;

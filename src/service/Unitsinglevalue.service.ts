@@ -24,7 +24,12 @@ export class UnitSingleValueService {
     }
 
     async findAll(): Promise<Unitsinglevalue001mb[]> {
-        return await this.unitsinglevalueRepository.find();
+        let unitsinglevalue001mbs : Unitsinglevalue001mb[] = [];
+        unitsinglevalue001mbs = await this.unitsinglevalueRepository.find();
+        for(let unitsinglevalue001mb of unitsinglevalue001mbs) {
+            unitsinglevalue001mb.unit = unescape( unitsinglevalue001mb.unit);
+        }
+        return unitsinglevalue001mbs;
     }
 
     findOne(id: number): Promise<Unitsinglevalue001mb> {
