@@ -295,6 +295,9 @@ export class Assay001wb {
   setProperties(assayDTO: AssayDTO) {
     this.assayId = assayDTO.assayId;
     this.ordinal = assayDTO.ordinal;
+    this.assayTypeSlno = assayDTO.assayTypeSlno;
+    this.toxiCitySlno = assayDTO.toxiCitySlno;
+    this.routeSlno = assayDTO.routeSlno;
     this.collectionId = assayDTO.collectionId;
     this.ligandSlno = assayDTO.ligandSlno;
     this.ligandSvalue = escape(assayDTO.ligandSvalue);

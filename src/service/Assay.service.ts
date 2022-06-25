@@ -17,19 +17,27 @@ export class AssayService {
 
     }
     async create(assayDTO: AssayDTO): Promise<Assay001wb> {
-        console.log("assayDTO--->", assayDTO.targetVersion);
-        
+
         const assay001wb = new Assay001wb();
-        console.log("assay001wb---->assay001wb",assay001wb);
-        
+
         assay001wb.setProperties(assayDTO);
         if (assay001wb.targetVersion == "" || assay001wb.targetVersion == null || assay001wb.targetVersion == "NA") {
             assay001wb.targetStatus = "";
             assay001wb.target = "";
         }
-        console.log("assay001wb---->assay001wb",assay001wb);
+        if (!assay001wb.dataLocator1 || assay001wb.dataLocator1 == null || assay001wb.dataLocator1 == "null") {
+            assay001wb.dataLocator1 = "";
+        }
+        if (!assay001wb.dataLocator2 || assay001wb.dataLocator2 == null || assay001wb.dataLocator2 == "null") {
+            assay001wb.dataLocator2 = "";
+        }
+        if (!assay001wb.dataLocator3 || assay001wb.dataLocator3 == null || assay001wb.dataLocator3 == "null") {
+            assay001wb.dataLocator3 = "";
+        }
+
         return this.assayRepository.save(assay001wb);
     }
+
     async update(assayDTO: AssayDTO): Promise<Assay001wb> {
         const assay001wb = new Assay001wb();
         assay001wb.setProperties(assayDTO);
@@ -82,7 +90,7 @@ export class AssayService {
             assay001wb.acronym = unescape(assay001wb.acronym)
             assay001wb.organism = unescape(assay001wb.organism)
             assay001wb.variant = unescape(assay001wb.variant)
-            
+
         }
         return assay001wbs;
 
