@@ -2,8 +2,17 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { AssayDTO } from "src/dto/Assay.dto";
 import { Assay001wb } from "src/entity/Assay001wb";
+import { Assaytype001mb } from "src/entity/Assaytype001mb";
+import { Category001mb } from "src/entity/Category001mb";
+import { Categoryfunction001mb } from "src/entity/Categoryfunction001mb";
 import { Ligand001wb } from "src/entity/Ligand001wb";
+import { Originalprefix001mb } from "src/entity/Originalprefix001mb";
+import { Routeofadministration001mb } from "src/entity/Routeofadministration001mb";
 import { Taskallocation001wb } from "src/entity/Taskallocation001wb";
+import { Toxicity001mb } from "src/entity/Toxicity001mb";
+import { Type001mb } from "src/entity/Type001mb";
+import { Unitlowendvalue001mb } from "src/entity/Unitlowendvalue001mb";
+import { Unitsinglevalue001mb } from "src/entity/Unitsinglevalue001mb";
 import { User001mb } from "src/entity/User001mb";
 import { getRepository, In, Repository } from "typeorm";
 
@@ -97,18 +106,75 @@ export class AssayService {
             assay001wb.conditionType = unescape(assay001wb.conditionType);
             assay001wb.highLowUnit = unescape(assay001wb.highLowUnit);
             assay001wb.status = unescape(assay001wb.status);
+            if(assay001wb.ligandSlno2) {
+                assay001wb.ligandSlno2.tanNumber = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.tanNumber : "");
+                assay001wb.ligandSlno2.collection = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.collection: "");
+                assay001wb.ligandSlno2.ligandDetail = unescape(assay001wb.ligandSlno2? assay001wb.ligandSlno2.ligandDetail:"");
+                assay001wb.ligandSlno2.identifier1 = unescape(assay001wb.ligandSlno2? assay001wb.ligandSlno2.identifier1:"");
+                assay001wb.ligandSlno2.identifier2 = unescape(assay001wb.ligandSlno2? assay001wb.ligandSlno2.identifier2:"");
+                assay001wb.ligandSlno2.identifier3 = unescape(assay001wb.ligandSlno2? assay001wb.ligandSlno2.identifier3:"");
+                assay001wb.ligandSlno2.collectionId = unescape(assay001wb.ligandSlno2? assay001wb.ligandSlno2.collectionId:"");
+                assay001wb.ligandSlno2.locator = unescape(assay001wb.ligandSlno2? assay001wb.ligandSlno2.locator:"");
+                assay001wb.ligandSlno2.diseaseName1 = unescape(assay001wb.ligandSlno2? assay001wb.ligandSlno2.diseaseName1:"");
+                assay001wb.ligandSlno2.diseaseName2 = unescape(assay001wb.ligandSlno2? assay001wb.ligandSlno2.diseaseName2:"");
+                assay001wb.ligandSlno2.diseaseName3 = unescape(assay001wb.ligandSlno2? assay001wb.ligandSlno2.diseaseName3:"");
+            } else {
+                assay001wb.ligandSlno2 = new Ligand001wb();
+            }
 
-            assay001wb.ligandSlno2.tanNumber = unescape(assay001wb.ligandSlno2.tanNumber);
-            assay001wb.ligandSlno2.collection = unescape(assay001wb.ligandSlno2.collection);
-            assay001wb.ligandSlno2.ligandDetail = unescape(assay001wb.ligandSlno2.ligandDetail);
-            assay001wb.ligandSlno2.identifier1 = unescape(assay001wb.ligandSlno2.identifier1);
-            assay001wb.ligandSlno2.identifier2 = unescape(assay001wb.ligandSlno2.identifier2);
-            assay001wb.ligandSlno2.identifier3 = unescape(assay001wb.ligandSlno2.identifier3);
-            assay001wb.ligandSlno2.collectionId = unescape(assay001wb.ligandSlno2.collectionId);
-            assay001wb.ligandSlno2.locator = unescape(assay001wb.ligandSlno2.locator);
-            assay001wb.ligandSlno2.diseaseName1 = unescape(assay001wb.ligandSlno2.diseaseName1);
-            assay001wb.ligandSlno2.diseaseName2 = unescape(assay001wb.ligandSlno2.diseaseName2);
-            assay001wb.ligandSlno2.diseaseName3 = unescape(assay001wb.ligandSlno2.diseaseName3);
+            if(assay001wb.assayTypeSlno2) {
+                assay001wb.assayTypeSlno2.assayType = unescape(assay001wb.assayTypeSlno2? assay001wb.assayTypeSlno2.assayType: null);
+            } else {
+                assay001wb.assayTypeSlno2 = new Assaytype001mb();
+            }
+
+            if(assay001wb.toxiCitySlno2){
+                assay001wb.toxiCitySlno2.toxiCity = unescape(assay001wb.toxiCitySlno2? assay001wb.toxiCitySlno2.toxiCity: null);
+            }else{
+                assay001wb.toxiCitySlno2 = new Toxicity001mb();
+            }
+            
+            if(assay001wb.routeSlno2){
+                assay001wb.routeSlno2.route = unescape(assay001wb.routeSlno2? assay001wb.routeSlno2.route: null);
+            }else{
+                assay001wb.routeSlno2 = new Routeofadministration001mb();
+            }
+
+            if(assay001wb.unitSlno2){
+                assay001wb.unitSlno2.unit = unescape(assay001wb.unitSlno2? assay001wb.unitSlno2.unit: null);
+            }else{
+                assay001wb.unitSlno2 = new Unitsinglevalue001mb();
+            }
+
+            if(assay001wb.unitedSlno2){
+                assay001wb.unitedSlno2.united = unescape(assay001wb.unitedSlno2? assay001wb.unitedSlno2.united: null);
+            }else{
+                assay001wb.unitedSlno2 = new Unitlowendvalue001mb();
+            }
+
+            if(assay001wb.categorySlno2){
+                assay001wb.categorySlno2.category = unescape(assay001wb.categorySlno2? assay001wb.categorySlno2.category: null);
+            }else{
+                assay001wb.categorySlno2 = new Category001mb();
+            }
+
+            if(assay001wb.functionSlno2){
+                assay001wb.functionSlno2.function = unescape(assay001wb.functionSlno2? assay001wb.functionSlno2.function: null);
+            }else{
+                assay001wb.functionSlno2 = new Categoryfunction001mb();
+            }
+
+            if(assay001wb.originalPrefixSlno2){
+                assay001wb.originalPrefixSlno2.originalPrefix = unescape(assay001wb.originalPrefixSlno2? assay001wb.originalPrefixSlno2.originalPrefix: null);
+            }else{
+                assay001wb.originalPrefixSlno2 = new Originalprefix001mb();
+            }
+
+            if(assay001wb.typeSlno2){
+                assay001wb.typeSlno2.type = unescape(assay001wb.typeSlno2? assay001wb.typeSlno2.type: null);
+            }else{
+                assay001wb.typeSlno2 = new Type001mb();
+            }
         }
         return assay001wbs;
 
