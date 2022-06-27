@@ -24,6 +24,11 @@ export class LigandService {
         } else {
             const ligand001wbNew = new Ligand001wb();
             ligand001wbNew.setProperties(ligandDTO);
+
+            if (!ligand001wbNew.collectionId || ligand001wbNew.collectionId == null || ligand001wbNew.collectionId == "null") {
+                ligand001wbNew.collectionId = "";
+            }
+
             return this.ligandRepository.save(ligand001wbNew);
         }
 
@@ -31,6 +36,9 @@ export class LigandService {
     async update(ligandDTO: LigandDTO): Promise<Ligand001wb> {
         const ligand001wb = new Ligand001wb();
         ligand001wb.setProperties(ligandDTO);
+        if (!ligand001wb.collectionId || ligand001wb.collectionId == null || ligand001wb.collectionId == "null") {
+            ligand001wb.collectionId = "";
+        }
         await this.ligandRepository.update({ ligandId: ligand001wb.ligandId }, ligand001wb);
         return ligand001wb;
     }

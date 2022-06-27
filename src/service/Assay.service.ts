@@ -54,6 +54,16 @@ export class AssayService {
             assay001wb.targetStatus = "";
             assay001wb.target = "";
         }
+
+        if (!assay001wb.dataLocator1 || assay001wb.dataLocator1 == null || assay001wb.dataLocator1 == "null") {
+            assay001wb.dataLocator1 = "";
+        }
+        if (!assay001wb.dataLocator2 || assay001wb.dataLocator2 == null || assay001wb.dataLocator2 == "null") {
+            assay001wb.dataLocator2 = "";
+        }
+        if (!assay001wb.dataLocator3 || assay001wb.dataLocator3 == null || assay001wb.dataLocator3 == "null") {
+            assay001wb.dataLocator3 = "";
+        }
         await this.assayRepository.update({ assayId: assay001wb.assayId }, assay001wb);
         return assay001wb;
     }
