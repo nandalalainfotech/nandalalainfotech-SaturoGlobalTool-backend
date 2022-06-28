@@ -18,7 +18,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
           host:  config.get("MAIL_HOST"),
           port: config.get("EMAIL_PORT"),
           secure: false,
-          ignoreTLS: true,
+          ignoreTLS: false,
           auth: {
             user: config.get("MAIL_USER"),
             pass: config.get("MAIL_PASSWORD"),
@@ -34,7 +34,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
           dir: join(__dirname, 'templates'),
           adapter: new HandlebarsAdapter(),
           options: {
-            strict: true,
+            strict: false,
           },
         },
       }),
