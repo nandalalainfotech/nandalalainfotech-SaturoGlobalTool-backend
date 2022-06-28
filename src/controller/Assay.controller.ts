@@ -35,6 +35,13 @@ export class AssayController {
 		return this.assayService.findAll(username);
 	}
 
+	@Get('findAllByLigandIdAndAssayId/:assayId')
+	findAllByLigandIdAndAssayId(@Param('assayId') assayId: any): Promise<Assay001wb[]> {
+		console.log("assayId---->>");
+		
+		return this.assayService.findAllByLigandIdAndAssayId(assayId);
+	}
+
 	// @hasRole(Role.Admin,Role.User)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findInprocesStatus/:username')

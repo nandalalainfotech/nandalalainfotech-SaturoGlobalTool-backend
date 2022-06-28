@@ -68,6 +68,41 @@ export class LigandService {
         return ligand001wbs;
     }
 
+    async findAllByLigandIdAndAssayId(ligandId: any, assayId: any): Promise<Ligand001wb> {
+        let ligand001wb: Ligand001wb;
+        // ligand001wbs = await this.ligandRepository.find({
+        //     where: {  ligandId: ligandId },
+        //     relations: [
+        //         "ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
+        //         "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
+        //         "assay001wbs.categorySlno2", "assay001wbs.functionSlno2", "assay001wbs.originalPrefixSlno2", "assay001wbs.typeSlno2"]
+        // });
+        // console.log("ligand001wbs--->>>",ligand001wbs);
+        ligand001wb = await this.ligandRepository.createQueryBuilder('ligand001wb')
+            .select(['ligand001wb.ligandId',
+                'ligand001wb.tanNumber',
+                "ligand001wb.ligandVersionSlno",
+                "ligand001wb.ligandTypeSlno",
+                "ligand001wb.identifier1",
+                "ligand001wb.identifier2",
+                "ligand001wb.identifier3",
+                "ligand001wb.collectionId",
+                "ligand001wb.locator",
+                "ligand001wb.ligandDetail",
+                "ligand001wb.diseaseName1",
+                "ligand001wb.diseaseName2",
+                "ligand001wb.diseaseName3",
+                "assay001wbs", "assay001wbs.assayTypeSlno2",
+                "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
+                "assay001wbs.categorySlno2", "assay001wbs.functionSlno2", "assay001wbs.originalPrefixSlno2", "assay001wbs.typeSlno2"])
+            .leftJoin('ligand001wb.assay001wbs', 'assay001wbs')
+            .where('ligand001wb.ligandId = :ligandId', { ligandId })
+            .where('assay001wbs.assayId = :assayId', { assayId }).getOne();
+            
+        return ligand001wb;
+
+    }
+
     async findInprocesStatus(username: any): Promise<Ligand001wb[]> {
         return await this.ligandRepository.find({ where: { status: "In Process", insertUser: username }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
