@@ -34,7 +34,11 @@ export class LigandController {
 		return this.ligandService.findAll(username);
 	}
 
-	
+	@Get('findAllByLigandIdAndAssayId/:ligandId/:assayId')
+	findAllByLigandIdAndAssayId(@Param('ligandId') ligandId: any, @Param('assayId') assayId: any, ): Promise<Ligand001wb> {
+		return this.ligandService.findAllByLigandIdAndAssayId(ligandId, assayId);
+	}
+
 	// @hasRole(Role.Admin,Role.User)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findInprocesStatus/:username')

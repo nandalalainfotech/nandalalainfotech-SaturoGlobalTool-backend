@@ -191,6 +191,18 @@ export class AssayService {
 
     }
 
+    async findAllByLigandIdAndAssayId(assayId: any): Promise<Assay001wb[]> {
+        console.log("inner of the findAllByLigandIdAndAssayId--->>>");
+        let assay001wbs: Assay001wb[] = [];
+        assay001wbs = await this.assayRepository.find({
+            where: { assayId: assayId }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"]
+        });
+        console.log("assay001wbs--->>>",assay001wbs);
+        
+        return assay001wbs;
+
+    }
+
     async findInprocesStatus(username: any): Promise<Assay001wb[]> {
 
         // let Assays: Assay001wb[] = [];
