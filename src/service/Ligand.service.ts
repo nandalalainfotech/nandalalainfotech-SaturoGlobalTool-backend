@@ -18,17 +18,18 @@ export class LigandService {
 
     }
     async create(ligandDTO: LigandDTO): Promise<Ligand001wb> {
-        const ligand001wb = await this.ligandRepository.findOne({ where: { tanNumber: ligandDTO.tanNumber } });
-        if (ligand001wb && ligand001wb.status == "Submitted to QC") {
+        const ligand001wb1 = await this.ligandRepository.findOne({ where: { tanNumber: ligandDTO.tanNumber } });
+        const ligand001wb2 = await this.ligandRepository.findOne({ where: { tanNumber: ligandDTO.tanNumber , ligandVersionSlno: ligandDTO.ligandVersionSlno } });
+        if (ligand001wb1 && ligand001wb1.status == "Submitted to QC") {
             throw new HttpException('Already Found!', HttpStatus.BAD_REQUEST);
+        } else if(ligand001wb2){
+            throw new HttpException('Ligand Version Already Found! ', HttpStatus.BAD_REQUEST);
         } else {
             const ligand001wbNew = new Ligand001wb();
             ligand001wbNew.setProperties(ligandDTO);
-
             if (!ligand001wbNew.collectionId || ligand001wbNew.collectionId == null || ligand001wbNew.collectionId == "null") {
                 ligand001wbNew.collectionId = "";
             }
-
             return this.ligandRepository.save(ligand001wbNew);
         }
 
@@ -145,21 +146,23 @@ export class LigandService {
         return this.ligandRepository.findOne({ where: { ligandId: id }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
 
-    async updateStatus(ligandId: any, tanNumber: any): Promise<Ligand001wb> {
+    async updateStatus(ligandId: any, tanNumber: any): Promise<string> {
         const ligand001wbUpdate = new Ligand001wb();
         ligand001wbUpdate.status = "Submitted to QC";
-        const ligand001wb = await this.ligandRepository.findOne({
-            where: { ligandId: ligandId, tanNumber: tanNumber }, relations: ["ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
+        const ligand001wbs = await this.ligandRepository.find({
+            where: { tanNumber: tanNumber }, relations: ["ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
                 "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
                 "assay001wbs.categorySlno2", "assay001wbs.functionSlno2", "assay001wbs.originalPrefixSlno2", "assay001wbs.typeSlno2"]
         });
-        await this.ligandRepository.save({ ...ligand001wb, ...ligand001wbUpdate });
-        for (let assay of ligand001wb.assay001wbs) {
-            let newAssas = new Assay001wb();
-            newAssas.status = "Submitted to QC";
-            await this.assayRepository.save({ ...assay, ...newAssas });
+        for(let ligand001wb of ligand001wbs) {
+            await this.ligandRepository.save({ ...ligand001wb, ...ligand001wbUpdate });
+            for (let assay of ligand001wb.assay001wbs) {
+                let newAssas = new Assay001wb();
+                newAssas.status = "Submitted to QC";
+                await this.assayRepository.save({ ...assay, ...newAssas });
+            }
         }
-        return ligand001wb;
+        return "Successfully Updated";
     }
 
     async remove(ligandId: number): Promise<void> {
