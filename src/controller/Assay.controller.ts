@@ -79,4 +79,9 @@ export class AssayController {
 	findOne(@Param('id') id: number | any): Promise<Assay001wb> {
 		return this.assayService.findOne(id);
 	}
+
+	@Get('findAllByTanligandID/:ligandSlno')
+	findAllByTanligandID(@Param('ligandSlno') ligandSlno: any): Promise<Assay001wb[]> {
+		return this.assayService.findAllByTanligandID(ligandSlno);
+	}
 }

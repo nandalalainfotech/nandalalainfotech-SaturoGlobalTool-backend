@@ -489,7 +489,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
 
 
     // --------------------------------------Measurement------------------------------
-    if (assaycount.dataLocator1 != null) {
+    if (assaycount.dataLocator1 != null && assaycount.dataLocator1 != "") {
         worksheet.mergeCells('AL' + temp);
         worksheet.getCell('AL' + temp).value = "Table " + assaycount.dataLocator1;
         worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
@@ -499,7 +499,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         };
     }
 
-    if (assaycount.dataLocator2 != null) {
+    if (assaycount.dataLocator2 != null && assaycount.dataLocator2 != "") {
         worksheet.mergeCells('AL' + temp);
         worksheet.getCell('AL' + temp).value = "Figure "+ assaycount.dataLocator2;
         worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
@@ -509,7 +509,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         };
     }
 
-    if (assaycount.dataLocator3 != null) {
+    if (assaycount.dataLocator3 != null && assaycount.dataLocator3 != "") {
         worksheet.mergeCells('AL' + temp);
         worksheet.getCell('AL' + temp).value = "Page " +assaycount.dataLocator3 + " (text)";
         worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
