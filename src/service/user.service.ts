@@ -32,10 +32,12 @@ export class UserService {
 		person001mb.insertDatetime = userDTO.insertDatetime;
 		person001mb.insertUser = userDTO.insertUser;
 		person001mb.personId = userDTO.personId;
-		this.personRepository.save(person001mb);
-		await this.userRepository.save(user001mb);
-		await this.mailService.sendUserConfirmation(user001mb);
-		return user001mb;
+		let person = await this.personRepository.save(person001mb);
+		if(person) {
+			await this.userRepository.save(user001mb);
+			await this.mailService.sendUserConfirmation(user001mb);
+			return user001mb;
+		}
 	}
 
 	async updateRole(userDTO: UserDTO): Promise<User001mb> {
@@ -52,7 +54,7 @@ export class UserService {
 
 	async update(userDTO: UserDTO): Promise<User001mb> {
 		const user001mb = await this.userRepository.findOne({ relations: ["role"], where: { personId: userDTO.personId } });
-	    user001mb.username = userDTO.username;
+		user001mb.username = userDTO.username;
 		user001mb.roleid = userDTO.roleid;
 		user001mb.status = userDTO.status;
 		user001mb.email = userDTO.email;
@@ -69,7 +71,7 @@ export class UserService {
 		person001mb.updatedUser = userDTO.updatedUser;
 		person001mb.updatedDatetime = userDTO.updatedDatetime;
 		await this.personRepository.save(person001mb);
-		return this.userRepository.save(user001mb);
+		return await this.userRepository.save(user001mb);
 	}
 
 	async updatePassword(userDTO: UserDTO): Promise<User001mb> {
@@ -78,32 +80,32 @@ export class UserService {
 		const user001mb = await this.userRepository.findOne({ where: { personId: userDTO.personId } });
 		user001mb.password = userDTO.password;
 		user001mb.status = "A";
-		return this.userRepository.save(user001mb);
+		return await this.userRepository.save(user001mb);
 	}
 
 	async updateUserName(user: any): Promise<User001mb> {
 		const user001mb = await this.userRepository.findOne({ where: { personId: user.personId } });
 		user001mb.username = user.username;
-		return this.userRepository.save(user001mb);
+		return await this.userRepository.save(user001mb);
 	}
 
 	async update1(updateTheme: any): Promise<User001mb> {
 		const user001mb = await this.userRepository.findOne({ where: { personId: updateTheme.personId } });
 		user001mb.theme = updateTheme.theme;
-		return this.userRepository.save(user001mb);
+		return await this.userRepository.save(user001mb);
 	}
 
 	async findAll(): Promise<User001mb[]> {
-		return this.userRepository.find({ relations: ["person","role"] });
+		return this.userRepository.find({ relations: ["person", "role"] });
 	}
 
 	async findAllReviewer(): Promise<User001mb[]> {
-		return this.userRepository.find({ relations: ["person","role"], where: { roleid: 3 }} );
+		return this.userRepository.find({ relations: ["person", "role"], where: { roleid: 3 } });
 	}
 
 
 	async findCuratorAll(): Promise<User001mb[]> {
-		return this.userRepository.find({ where: { roleid: 2 } ,relations: ["person","role"] });
+		return this.userRepository.find({ where: { roleid: 2 }, relations: ["person", "role"] });
 	}
 
 	// async findReviewerAll(): Promise<User001mb[]> {
