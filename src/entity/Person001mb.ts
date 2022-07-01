@@ -94,8 +94,8 @@ export class Person001mb {
   @Column("datetime", { name: "updated_datetime", nullable: true })
   updatedDatetime: Date | null;
 
-  @OneToOne(() => User001mb, (user001mb) => user001mb.person)
-  user001mb: User001mb;
+  // @OneToOne(() => User001mb, (user001mb) => user001mb.person)
+  // user001mb: User001mb;
 
   setProperties(personDTO: PersonDTO) {
     this.personId = personDTO.personId;

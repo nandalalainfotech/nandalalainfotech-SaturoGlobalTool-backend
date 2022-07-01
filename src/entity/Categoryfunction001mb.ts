@@ -35,7 +35,7 @@ export class Categoryfunction001mb {
 
   setProperties(categoryFunctionDTO: CategoryFunctionDTO) {
     this.id = categoryFunctionDTO.id;
-    this.function = categoryFunctionDTO.function;
+    this.function = escape(categoryFunctionDTO.function);
     this.insertUser = categoryFunctionDTO.insertUser;
     this.insertDatetime = categoryFunctionDTO.insertDatetime;
     this.updatedUser = categoryFunctionDTO.updatedUser;

@@ -27,13 +27,47 @@ export class AssayController {
 	}
 
 
+
 	// @hasRole(Role.Admin,Role.User)
 	// @UseGuards(JwtAuthGuard, RolesGuard)
-	@Get('findAll')
-	findAll(): Promise<Assay001wb[]> {
-		console.log("findall-controller");
-		return this.assayService.findAll();
+	@Get('findAll/:username')
+	findAll(@Param('username') username: any): Promise<Assay001wb[]> {
+		return this.assayService.findAll(username);
 	}
+
+	@Get('allAssayReviewer/:username')
+	allAssayReviewer(@Param('username') username: any): Promise<Assay001wb[]> {
+		return this.assayService.allAssayReviewer(username);
+	}
+
+	@Get('findAllByLigandIdAndAssayId/:assayId')
+	findAllByLigandIdAndAssayId(@Param('assayId') assayId: any): Promise<Assay001wb[]> {
+		console.log("assayId---->>");
+		
+		return this.assayService.findAllByLigandIdAndAssayId(assayId);
+	}
+
+	// @hasRole(Role.Admin,Role.User)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('findInprocesStatus/:username')
+	findInprocesStatus(@Param('username') username: any): Promise<Assay001wb[]> {
+		return this.assayService.findInprocesStatus(username);
+	}
+
+	// @hasRole(Role.Admin,Role.User)
+	// @UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('findByReviewer/:username')
+	findByReviewer(@Param('username') username: any): Promise<Assay001wb[]> {
+		return this.assayService.findByReviewer(username);
+	}
+
+
+
+	// @Get('findByCuratorTan/:username')
+	// findByCuratorTan(@Param('username') username: any): Promise<Assay001wb[]> {
+	// 	return this.assayService.findByCuratorTan(username);
+	// }
+
 
 
 	// @hasRole(Role.Admin,Role.User)
@@ -47,7 +81,12 @@ export class AssayController {
 	// @hasRole(Role.Admin,Role.User)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get(':id')
-	findOne(@Param('id') id: number): Promise<Assay001wb> {
+	findOne(@Param('id') id: number | any): Promise<Assay001wb> {
 		return this.assayService.findOne(id);
+	}
+
+	@Get('findAllByTanligandID/:ligandSlno')
+	findAllByTanligandID(@Param('ligandSlno') ligandSlno: any): Promise<Assay001wb[]> {
+		return this.assayService.findAllByTanligandID(ligandSlno);
 	}
 }

@@ -1,7 +1,7 @@
 import { TaskallocationDTO } from "src/dto/Taskallocation001wb.dto";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity("taskallocation001wb", { schema: "saturo" })
+@Entity("taskallocation001wb", { schema: "newsaturo" })
 export class Taskallocation001wb {
   @PrimaryGeneratedColumn({ type: "int", name: "curator_id" })
   curatorId: number;

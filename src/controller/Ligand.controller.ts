@@ -20,27 +20,44 @@ export class LigandController {
 
 	
 	// @hasRole(Role.Admin,Role.User)
-	@UseGuards(JwtAuthGuard, RolesGuard)
-	@Put("update")
-	update(@Body() ligandDTO: LigandDTO): Promise<Ligand001wb> {
-		return this.ligandService.update(ligandDTO);
-	}
+
 
 	
 	// @hasRole(Role.Admin,Role.User)
-	@UseGuards(JwtAuthGuard, RolesGuard)
+		@UseGuards(JwtAuthGuard, RolesGuard)
+	@Put("update")
+	update(@Body() ligandDTO: LigandDTO): Promise<Ligand001wb> {
+		return this.ligandService.update(ligandDTO);
+	}@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findAll/:username')
 	findAll(@Param('username') username: any): Promise<Ligand001wb[]> {
-		// console.log("username findAll-->", username);
 		return this.ligandService.findAll(username);
 	}
 
-	// @UseGuards(JwtAuthGuard)
-	// @Get('findAllByUser/:username')
-	// findAllByUser(@Param('username') username: any): Promise<Ligand001wb[]> {
-	// 	console.log("username findAllByUser-->",username);
-	// 	return this.ligandService.findAll();
-	// }
+	@Get('findAllByLigandIdAndAssayId/:ligandId/:assayId')
+	findAllByLigandIdAndAssayId(@Param('ligandId') ligandId: any, @Param('assayId') assayId: any, ): Promise<Ligand001wb> {
+		return this.ligandService.findAllByLigandIdAndAssayId(ligandId, assayId);
+	}
+
+	@Get('findAllByLigandId/:ligandId')
+	findAllByLigandId(@Param('ligandId') ligandId: any): Promise<Ligand001wb> {
+		
+		return this.ligandService.findAllByLigandId(ligandId);
+	}
+
+	// @hasRole(Role.Admin,Role.User)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('findInprocesStatus/:username')
+	findInprocesStatus(@Param('username') username: any): Promise<Ligand001wb[]> {
+		return this.ligandService.findInprocesStatus(username);
+	}
+
+	// @hasRole(Role.Admin,Role.User)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('findSubmotToQcStatus/:username')
+	findSubmotToQcStatus(@Param('username') username: any): Promise<Ligand001wb[]> {
+		return this.ligandService.findSubmotToQcStatus(username);
+	}
 
 	
 	// @hasRole(Role.Admin,Role.User)
@@ -56,5 +73,17 @@ export class LigandController {
 	@Get(':id')
 	findOne(@Param('id') id: number): Promise<Ligand001wb> {
 		return this.ligandService.findOne(id);
+	}
+
+	// @UseGuards(JwtAuthGuard, RolesGuard)
+	// @Put('updateStatus/:tanNumber')
+	// updateStatus(@Param('tanNumber') tanNumber: any): Promise<Ligand001wb> {
+	// 	return this.ligandService.updateStatus(tanNumber);
+	// }
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Put('updateStatus/:ligandId/:tanNumber')
+	updateStatus(@Param('ligandId') ligandId: any,@Param('tanNumber') tanNumber: any): Promise<Ligand001wb> {
+		
+		return this.ligandService.updateStatus(ligandId, tanNumber);
 	}
 }

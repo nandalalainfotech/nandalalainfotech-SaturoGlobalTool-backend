@@ -27,7 +27,7 @@ export class Assaytype001mb {
 
   setProperties(assayTypeDTO: AssayTypeDTO) {
     this.id = assayTypeDTO.id;
-    this.assayType = assayTypeDTO.assayType;
+    this.assayType = escape(assayTypeDTO.assayType);
     this.insertUser = assayTypeDTO.insertUser;
     this.insertDatetime = assayTypeDTO.insertDatetime;
     this.updatedUser = assayTypeDTO.updatedUser;

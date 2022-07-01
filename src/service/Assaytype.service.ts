@@ -24,7 +24,12 @@ export class AssaytypeService {
     }
 
     async findAll(): Promise<Assaytype001mb[]> {
-        return await this.assaytypeRepository.find();
+        let assaytype001mbs: Assaytype001mb[] = [];
+        assaytype001mbs = await this.assaytypeRepository.find();
+        for(let assaytype001mb of assaytype001mbs) {
+            assaytype001mb.assayType = unescape( assaytype001mb.assayType);
+        }
+        return assaytype001mbs;
     }
 
     findOne(id: number): Promise<Assaytype001mb> {

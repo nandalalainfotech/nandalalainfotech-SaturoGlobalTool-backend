@@ -24,7 +24,12 @@ export class CategoryService {
     }
 
     async findAll(): Promise<Category001mb[]> {
-        return await this.categoryRepository.find();
+        let category001mbs: Category001mb[] = [];
+        category001mbs = await this.categoryRepository.find();
+        for(let category001mb of category001mbs) {
+            category001mb.category = unescape( category001mb.category);
+        }
+        return category001mbs;
     }
 
     findOne(id: number): Promise<Category001mb> {

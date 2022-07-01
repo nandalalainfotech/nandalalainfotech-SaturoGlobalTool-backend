@@ -24,7 +24,12 @@ export class TypeService {
     }
 
     async findAll(): Promise<Type001mb[]> {
-        return await this.typeRepository.find();
+        let type001mbs: Type001mb[] = [];
+        type001mbs = await this.typeRepository.find();
+        for(let type001mb of type001mbs) {
+            type001mb.type = unescape( type001mb.type);
+        }
+        return type001mbs;
     }
 
     findOne(id: number): Promise<Type001mb> {

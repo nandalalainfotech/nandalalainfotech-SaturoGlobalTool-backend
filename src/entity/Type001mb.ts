@@ -34,7 +34,7 @@ export class Type001mb {
 
   setProperties(typeDTO: TypeDTO) {
     this.id = typeDTO.id;
-    this.type = typeDTO.type;
+    this.type = escape(typeDTO.type);
     this.insertUser = typeDTO.insertUser;
     this.insertDatetime = typeDTO.insertDatetime;
     this.updatedUser = typeDTO.updatedUser;

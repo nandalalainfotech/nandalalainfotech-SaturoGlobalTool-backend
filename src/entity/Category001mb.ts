@@ -33,7 +33,7 @@ export class Category001mb {
 
   setProperties(categoryDTO: CategoryDTO) {
     this.id = categoryDTO.id;
-    this.category = categoryDTO.category;
+    this.category = escape(categoryDTO.category);
     this.insertUser = categoryDTO.insertUser;
     this.insertDatetime = categoryDTO.insertDatetime;
     this.updatedUser = categoryDTO.updatedUser;
