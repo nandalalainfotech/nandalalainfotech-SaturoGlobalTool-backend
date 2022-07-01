@@ -82,7 +82,7 @@ export class LigandController {
 	// }
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Put('updateStatus/:ligandId/:tanNumber')
-	updateStatus(@Param('ligandId') ligandId: any,@Param('tanNumber') tanNumber: any): Promise<string> {
+	updateStatus(@Param('ligandId') ligandId: any,@Param('tanNumber') tanNumber: any): Promise<Ligand001wb> {
 		
 		return this.ligandService.updateStatus(ligandId, tanNumber);
 	}
