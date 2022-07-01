@@ -22,7 +22,7 @@ export class AuthService {
 	}
 
 	async getUserAuthentication(username: string, password: string) {
-		const user001mb: User001mb = await this.loginRepository.findOne({relations: ["person",  'role'], where: { username: username } });
+		const user001mb: User001mb = await this.loginRepository.findOne({relations: ['role'], where: { username: username } });
 		let userDTO = new UserDTO();
 		if (user001mb) {
 			const isMatch = await bcrypt.compare(password, user001mb.password);

@@ -35,7 +35,7 @@ export class TaskallocationService {
         
         let taskallocation001wbs: Taskallocation001wb[] = [];
         let reviewers: User001mb[] = [];
-        reviewers = await this.userRepository.find({ relations: ["person", "role"], where: { roleid: 3 } });
+        reviewers = await this.userRepository.find({ relations: ["role"], where: { roleid: 3 } });
         for (let i = 0; i < sheet.length; i++) {
            
             

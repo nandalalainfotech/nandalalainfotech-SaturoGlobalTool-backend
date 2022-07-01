@@ -13,7 +13,6 @@ import { LigandTypeModule } from './module/LigandType.module';
 import { LigandVersionModule } from './module/Ligandversion.module';
 import { MeasurementModule } from './module/Measurement.module';
 import { OriginalPrefixModule } from './module/Originalprefix.module';
-import { PersonModule } from './module/person.module';
 import { ReportsModule } from './module/Report.module';
 import { RoleModule } from './module/role.module';
 import { RouteOfAdministartionModule } from './module/Routeofadministartion.module';
@@ -56,7 +55,6 @@ import { UserModule } from './module/user.module';
         AuthModule,
         MailModule,
         SystemPropertiesModule,
-        PersonModule,
         RoleModule,
         UserModule,
         AssayModule,
