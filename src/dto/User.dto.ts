@@ -26,6 +26,7 @@ export class UserDTO extends PersonDTO{
     role: Role001mb;
 
     setProperties(user001mb: User001mb) {
+        this.personId = user001mb.personId;
         this.rolename = user001mb.role.rolename;
         this.username = user001mb.username;
         this.firstname = user001mb.firstname;
