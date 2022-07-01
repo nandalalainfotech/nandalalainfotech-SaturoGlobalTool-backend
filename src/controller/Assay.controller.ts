@@ -35,6 +35,11 @@ export class AssayController {
 		return this.assayService.findAll(username);
 	}
 
+	@Get('allAssayReviewer/:username')
+	allAssayReviewer(@Param('username') username: any): Promise<Assay001wb[]> {
+		return this.assayService.allAssayReviewer(username);
+	}
+
 	@Get('findAllByLigandIdAndAssayId/:assayId')
 	findAllByLigandIdAndAssayId(@Param('assayId') assayId: any): Promise<Assay001wb[]> {
 		console.log("assayId---->>");
