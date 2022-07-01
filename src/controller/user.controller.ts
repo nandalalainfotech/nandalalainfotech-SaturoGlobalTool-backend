@@ -64,8 +64,8 @@ export class UserController {
 		return this.userService.updatePassword(userDTO);
 	}
 
-	@hasRole(Role.Admin)
-	@UseGuards(JwtAuthGuard, RolesGuard)
+	// @hasRole(Role.Admin)
+	// @UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findAll')
 	findAll(): Promise<User001mb[]> {
 		return this.userService.findAll();

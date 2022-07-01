@@ -40,10 +40,10 @@ export class ReportsService {
             for (let i = 0; i < assays.length; i++) {
                 let tempTan = (i == 0) ? 0 : (i != 0) ? (i - 1) : 0;
                 // console.log("testing",i, tempTan, assays[tempTan].ligandSlno2.tanNumber, assays[i].ligandSlno2.tanNumber, assays[tempTan].ligandSlno2.tanNumber == assays[i].ligandSlno2.tanNumber )
-                if (assays[tempTan].ligandSlno2.tanNumber == assays[i].ligandSlno2.tanNumber) {
+                if (assays[tempTan].ligandSlno2?.tanNumber == assays[i].ligandSlno2.tanNumber) {
                     let assaycount = assays[i];
                     await ReportData(worksheet, initRow, assaycount, i);
-                    tanNumber = assays[i].ligandSlno2.tanNumber;
+                    tanNumber = assays[i].ligandSlno2?.tanNumber;
                     initRow++;
                 } else {
                     await workbook.xlsx.writeFile('./EXCEL/export_' + tanNumber + '.xlsx');
@@ -52,7 +52,7 @@ export class ReportsService {
                     worksheet = await ReportHeader(workbook);
                     let assaycount = assays[i];
                     await ReportData(worksheet, initRow, assaycount, i);
-                    tanNumber = assays[i].ligandSlno2.tanNumber;
+                    tanNumber = assays[i].ligandSlno2?.tanNumber;
                     initRow++;
                 }
             }
@@ -78,7 +78,7 @@ export class ReportsService {
 async function ReportData(worksheet, temp, assaycount, i) {
     // console.log("assaycount", assaycount);
     worksheet.mergeCells('A' + temp);
-    worksheet.getCell('A' + temp).value = assaycount.ligandSlno2.tanNumber;
+    worksheet.getCell('A' + temp).value = assaycount.ligandSlno2?.tanNumber;
     worksheet.getCell('A' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('A' + temp).font = {
         size: 10,
@@ -86,7 +86,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('B' + temp);
-    worksheet.getCell('B' + temp).value = assaycount.ligandSlno2.ligandUri;
+    worksheet.getCell('B' + temp).value = assaycount.ligandSlno2?.ligandUri;
     worksheet.getCell('B' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('B' + temp).font = {
         size: 10,
@@ -94,7 +94,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('C' + temp);
-    worksheet.getCell('C' + temp).value = assaycount.ligandSlno2.ligandVersionSlno2.ligandVersion;
+    worksheet.getCell('C' + temp).value = assaycount.ligandSlno2?.ligandVersionSlno2?.ligandVersion;
     worksheet.getCell('C' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('C' + temp).font = {
         size: 10,
@@ -118,7 +118,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
         name: 'Calibri',
     };
 
-    if (assaycount.ligandSlno2.ligandTypeSlno2.ligandtype != null) {
+    if (assaycount.ligandSlno2.ligandTypeSlno2?.ligandtype != null) {
     worksheet.mergeCells('F' + temp);
     worksheet.getCell('F' + temp).value = assaycount.ligandSlno2.ligandTypeSlno2.ligandtype;
     worksheet.getCell('F' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
@@ -129,7 +129,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
    }
 
     worksheet.mergeCells('G' + temp);
-    worksheet.getCell('G' + temp).value = assaycount.ligandSlno2.identifier1;
+    worksheet.getCell('G' + temp).value = assaycount.ligandSlno2?.identifier1;
     worksheet.getCell('G' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('G' + temp).font = {
         size: 10,
@@ -137,7 +137,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('H' + temp);
-    worksheet.getCell('H' + temp).value = assaycount.ligandSlno2.identifier2;
+    worksheet.getCell('H' + temp).value = assaycount.ligandSlno2?.identifier2;
     worksheet.getCell('H' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('H' + temp).font = {
         size: 10,
@@ -146,7 +146,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
 
 
     worksheet.mergeCells('I' + temp);
-    worksheet.getCell('I' + temp).value = assaycount.ligandSlno2.identifier3;
+    worksheet.getCell('I' + temp).value = assaycount.ligandSlno2?.identifier3;
     worksheet.getCell('I' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('I' + temp).font = {
         size: 10,
@@ -154,7 +154,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('J' + temp);
-    worksheet.getCell('J' + temp).value = assaycount.ligandSlno2.collectionId;
+    worksheet.getCell('J' + temp).value = assaycount.ligandSlno2?.collectionId;
     worksheet.getCell('J' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('J' + temp).font = {
         size: 10,
@@ -162,7 +162,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('K' + temp);
-    worksheet.getCell('K' + temp).value = assaycount.ligandSlno2.ligandDetail;
+    worksheet.getCell('K' + temp).value = assaycount.ligandSlno2?.ligandDetail;
     worksheet.getCell('K' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('K' + temp).font = {
         size: 10,
@@ -170,7 +170,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('L' + temp);
-    worksheet.getCell('L' + temp).value = assaycount.ligandSlno2.locator;
+    worksheet.getCell('L' + temp).value = assaycount.ligandSlno2?.locator;
     worksheet.getCell('L' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('L' + temp).font = {
         size: 10,
@@ -186,7 +186,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('N' + temp);
-    worksheet.getCell('N' + temp).value = assaycount.ligandSlno2.tanNumber;
+    worksheet.getCell('N' + temp).value = assaycount.ligandSlno2?.tanNumber;
     worksheet.getCell('N' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('N' + temp).font = {
         size: 10,
@@ -194,7 +194,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('O' + temp);
-    worksheet.getCell('O' + temp).value = assaycount.ligandSlno2.tanNumber;
+    worksheet.getCell('O' + temp).value = assaycount.ligandSlno2?.tanNumber;
     worksheet.getCell('O' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('O' + temp).font = {
         size: 10,
@@ -202,7 +202,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('P' + temp);
-    worksheet.getCell('P' + temp).value = assaycount.ligandSlno2.collectionId;
+    worksheet.getCell('P' + temp).value = assaycount.ligandSlno2?.collectionId;
     worksheet.getCell('P' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('P' + temp).font = {
         size: 10,
@@ -210,7 +210,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('BH' + temp);
-    worksheet.getCell('BH' + temp).value = assaycount.ligandSlno2.diseaseName1;
+    worksheet.getCell('BH' + temp).value = assaycount.ligandSlno2?.diseaseName1;
     worksheet.getCell('BH' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('BH' + temp).font = {
         size: 10,
@@ -218,7 +218,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('BI' + temp);
-    worksheet.getCell('BI' + temp).value = assaycount.ligandSlno2.diseaseName2;
+    worksheet.getCell('BI' + temp).value = assaycount.ligandSlno2?.diseaseName2;
     worksheet.getCell('BI' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('BI' + temp).font = {
         size: 10,
@@ -226,7 +226,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('BJ' + temp);
-    worksheet.getCell('BJ' + temp).value = assaycount.ligandSlno2.diseaseName3;
+    worksheet.getCell('BJ' + temp).value = assaycount.ligandSlno2?.diseaseName3;
     worksheet.getCell('BJ' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
     worksheet.getCell('BJ' + temp).font = {
         size: 10,
@@ -311,7 +311,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     worksheet.mergeCells('R' + temp);
-    worksheet.getCell('R' + temp).value = assaycount.ligandSlno2.tanNumber + "-" + (i + 1);
+    worksheet.getCell('R' + temp).value = assaycount.ligandSlno2?.tanNumber + "-" + (i + 1);
     worksheet.getCell('R' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
     worksheet.getCell('R' + temp).font = {
         size: 10,
