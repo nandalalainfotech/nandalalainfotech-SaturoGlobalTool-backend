@@ -49,8 +49,10 @@ export class TaskallocationService {
             taskallocation001wb.insertUser = taskallocationDTO.insertUser;
             taskallocation001wb.insertDatetime = taskallocationDTO.insertDatetime;
 
-            let random = Math.floor(Math.random() * reviewers.length);
-            taskallocation001wb.reviewerName = reviewers[random].username;
+            // let random = Math.floor(Math.random() * reviewers.length);
+            // taskallocation001wb.reviewerName = reviewers[random].username;
+            taskallocation001wb.reviewerName = sheet[i].REVIEWERNAME;
+            taskallocation001wb.reviewerTanNo = sheet[i].TANNUMBER_1;
             taskallocation001wb.reviewerTanNo = sheet[i].TANNUMBER;
             taskallocation001wb.rbatchNo = sheet[i].RBATCHNUMBER;
             this.taskAllocateRepository.save(taskallocation001wb);
