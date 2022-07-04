@@ -25,7 +25,7 @@ export class TypeService {
 
     async findAll(): Promise<Type001mb[]> {
         let type001mbs: Type001mb[] = [];
-        type001mbs = await this.typeRepository.find();
+        type001mbs = await this.typeRepository.find({order: { type: "ASC" }});
         for(let type001mb of type001mbs) {
             type001mb.type = unescape( type001mb.type);
         }

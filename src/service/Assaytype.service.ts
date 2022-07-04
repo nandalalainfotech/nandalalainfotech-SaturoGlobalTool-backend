@@ -19,15 +19,15 @@ export class AssaytypeService {
     async update(assayTypeDTO: AssayTypeDTO): Promise<Assaytype001mb> {
         const assaytype001mb = new Assaytype001mb();
         assaytype001mb.setProperties(assayTypeDTO);
-        await this.assaytypeRepository.update({id: assaytype001mb.id }, assaytype001mb);
+        await this.assaytypeRepository.update({ id: assaytype001mb.id }, assaytype001mb);
         return assaytype001mb;
     }
 
     async findAll(): Promise<Assaytype001mb[]> {
         let assaytype001mbs: Assaytype001mb[] = [];
-        assaytype001mbs = await this.assaytypeRepository.find();
-        for(let assaytype001mb of assaytype001mbs) {
-            assaytype001mb.assayType = unescape( assaytype001mb.assayType);
+        assaytype001mbs = await this.assaytypeRepository.find({order: { assayType: "ASC" }});
+        for (let assaytype001mb of assaytype001mbs) {
+            assaytype001mb.assayType = unescape(assaytype001mb.assayType);
         }
         return assaytype001mbs;
     }

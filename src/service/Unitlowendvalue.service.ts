@@ -25,7 +25,7 @@ export class UnitlowendvalueService {
 
     async findAll(): Promise<Unitlowendvalue001mb[]> {
         let unitlowendvalue001mbs: Unitlowendvalue001mb[] = [];
-        unitlowendvalue001mbs = await this.unitlowendvalueRepository.find();
+        unitlowendvalue001mbs = await this.unitlowendvalueRepository.find({order: { united: "ASC" }});
         for(let unitlowendvalue001mb of unitlowendvalue001mbs) {
             unitlowendvalue001mb.united = unescape( unitlowendvalue001mb.united);
         }

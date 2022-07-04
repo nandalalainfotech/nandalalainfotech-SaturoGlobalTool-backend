@@ -25,7 +25,7 @@ export class ToxicityService {
 
     async findAll(): Promise<Toxicity001mb[]> {
         let toxicity001mbs: Toxicity001mb[] = [];
-        toxicity001mbs = await this.toxicityRepository.find();
+        toxicity001mbs = await this.toxicityRepository.find({order: { toxiCity: "ASC" }});
         for(let toxicity001mb of toxicity001mbs) {
             toxicity001mb.toxiCity = unescape( toxicity001mb.toxiCity);
         }
