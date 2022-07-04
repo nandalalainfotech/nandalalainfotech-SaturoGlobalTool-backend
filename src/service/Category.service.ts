@@ -25,7 +25,7 @@ export class CategoryService {
 
     async findAll(): Promise<Category001mb[]> {
         let category001mbs: Category001mb[] = [];
-        category001mbs = await this.categoryRepository.find();
+        category001mbs = await this.categoryRepository.find({order: { category: "ASC" }});
         for(let category001mb of category001mbs) {
             category001mb.category = unescape( category001mb.category);
         }

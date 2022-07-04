@@ -25,7 +25,7 @@ export class LigandTypeService {
 
     async findAll(): Promise<Ligandtype001mb[]> {
         let ligandtype001mbs: Ligandtype001mb[] = [];
-        ligandtype001mbs = await this.ligandtypeRepository.find();
+        ligandtype001mbs = await this.ligandtypeRepository.find({order: { ligandtype: "ASC" }});
         for(let ligandtype001mb of ligandtype001mbs) {
             ligandtype001mb.ligandtype = unescape( ligandtype001mb.ligandtype);
         }
