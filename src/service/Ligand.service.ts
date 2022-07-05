@@ -149,6 +149,7 @@ export class LigandService {
     async updateStatus(ligandId: any, tanNumber: any): Promise<Ligand001wb> {
         const ligand001wbUpdate = new Ligand001wb();
         ligand001wbUpdate.status = "Submitted to QC";
+        ligand001wbUpdate.updatedDatetime = new Date();
         const ligand001wbs = await this.ligandRepository.find({
             where: { tanNumber: tanNumber }, relations: ["ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
                 "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
@@ -165,6 +166,7 @@ export class LigandService {
 
         const taskallocation001wb = new Taskallocation001wb();
         taskallocation001wb.status  = "Submitted to QC";
+        taskallocation001wb.updatedDatetime = new Date();
         await this.taskAllocateRepository.update({ curatorTanNo: tanNumber }, taskallocation001wb);
         
         return ligand001wbUpdate;
