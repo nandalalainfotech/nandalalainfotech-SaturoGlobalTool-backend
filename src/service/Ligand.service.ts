@@ -162,6 +162,11 @@ export class LigandService {
                 await this.assayRepository.save({ ...assay, ...newAssas });
             }
         }
+
+        const taskallocation001wb = new Taskallocation001wb();
+        taskallocation001wb.status  = "Submitted to QC";
+        await this.taskAllocateRepository.update({ curatorTanNo: tanNumber }, taskallocation001wb);
+        
         return ligand001wbUpdate;
     }
 
