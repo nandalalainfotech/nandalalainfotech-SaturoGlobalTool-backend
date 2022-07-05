@@ -33,7 +33,7 @@ export class Taskallocation001wb {
   @Column("varchar", { name: "filename", nullable: true, length: 200 })
   filename: string | null;
 
-  @Column("varchar", { name: "status", nullable: true, length: 150 })
+  @Column("varchar", { name: "status", nullable: true, length: 100 })
   status: string | null;
 
   @Column("varchar", { name: "insert_user", nullable: true, length: 40 })
