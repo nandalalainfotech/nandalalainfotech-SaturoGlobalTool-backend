@@ -27,4 +27,10 @@ export class ReportsController {
     async downloadExcel( @Req() request: Request, @Res() response: Response) {
         return await this.reportsService.downloadExcel( request, response);
     }
+
+    // @UseGuards(JwtAuthGuard, RolesGuard)
+    @Get('Tanexcel/:reviewerTan')
+    async downloadTanExcel(@Param('reviewerTan') reviewerTan: any, @Req() request: Request, @Res() response: Response) {
+        return await this.reportsService.downloadTanExcel(reviewerTan, request, response);
+    }
 }
