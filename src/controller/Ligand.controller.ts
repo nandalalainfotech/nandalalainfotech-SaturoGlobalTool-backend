@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { get } from "http";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { LigandDTO } from "src/dto/Ligand.dto";
 import { Ligand001wb } from "src/entity/Ligand001wb";
@@ -45,6 +46,12 @@ export class LigandController {
 		return this.ligandService.findAllByLigandId(ligandId);
 	}
 
+	@Get('findAllRejected/:ligandId')
+	findAllRejected(@Param('ligandId') ligandId: any): Promise<Ligand001wb> {
+		
+		return this.ligandService.findAllRejected(ligandId);
+	}
+
 	// @hasRole(Role.Admin,Role.User)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findInprocesStatus/:username')
@@ -85,5 +92,19 @@ export class LigandController {
 	updateStatus(@Param('ligandId') ligandId: any,@Param('tanNumber') tanNumber: any): Promise<Ligand001wb> {
 		
 		return this.ligandService.updateStatus(ligandId, tanNumber);
+	}
+
+	// @UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('reviewerAcceptStatusUpdate/:tanNumber/:username')
+	reviewerAcceptStatusUpdate(@Param('tanNumber') tanNumber: any,@Param('username') username: any): Promise<Ligand001wb> {
+		
+		return this.ligandService.reviewerAcceptStatusUpdate(tanNumber,username);
+	}
+
+	// @UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('reviewerRejectStatusUpdate/:tanNumber/:username')
+	reviewerRejectStatusUpdate(@Param('tanNumber') tanNumber: any,@Param('username') username: any): Promise<Ligand001wb> {
+		
+		return this.ligandService.reviewerRejectStatusUpdate(tanNumber,username);
 	}
 }

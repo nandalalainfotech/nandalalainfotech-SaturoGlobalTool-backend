@@ -256,7 +256,7 @@ export class Assay001wb {
 
   @ManyToOne(() => Ligand001wb, (ligand001wb) => ligand001wb.assay001wbs, {
     onDelete: "CASCADE",
-    onUpdate: "RESTRICT",
+    onUpdate: "CASCADE",
   })
   @JoinColumn([{ name: "ligand_slno", referencedColumnName: "ligandId" }])
   ligandSlno2: Ligand001wb;

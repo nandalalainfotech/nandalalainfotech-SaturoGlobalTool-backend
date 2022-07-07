@@ -36,6 +36,9 @@ export class Taskallocation001wb {
   @Column("varchar", { name: "status", nullable: true, length: 100 })
   status: string | null;
 
+  @Column("varchar", { name: "reviewer_status", nullable: true, length: 100 })
+  reviewerStatus: string | null;
+
   @Column("varchar", { name: "insert_user", nullable: true, length: 40 })
   insertUser: string | null;
 
@@ -48,6 +51,9 @@ export class Taskallocation001wb {
   @Column("datetime", { name: "updated_datetime", nullable: true })
   updatedDatetime: Date | null;
 
+  @Column("datetime", { name: "reviewer_updated_date", nullable: true })
+  reviewerUpdatedDate: Date | null;
+
 
 
   setProperties(taskallocationDTO: TaskallocationDTO) {
@@ -56,14 +62,17 @@ export class Taskallocation001wb {
     this.cbatchNo = taskallocationDTO.cbatchNo;
     this.curatorTanNo = taskallocationDTO.curatorTanNo;
     this.curatorAllocateDate = taskallocationDTO.curatorAllocateDate;
+    this.status = taskallocationDTO.status;
     this.reviewerName = taskallocationDTO.reviewerName;
     this.rbatchNo = taskallocationDTO.rbatchNo;
     this.reviewerTanNo = taskallocationDTO.reviewerTanNo;
     this.filename = taskallocationDTO.filename;
     this.reviewerAllocateDate = taskallocationDTO.reviewerAllocateDate;
+    this.reviewerStatus = taskallocationDTO.reviewerStatus;
     this.insertUser = taskallocationDTO.insertUser;
     this.insertDatetime = taskallocationDTO.insertDatetime;
     this.updatedUser = taskallocationDTO.updatedUser;
     this.updatedDatetime = taskallocationDTO.updatedDatetime;
+    this.reviewerUpdatedDate = taskallocationDTO.reviewerUpdatedDate;
 }
 }
