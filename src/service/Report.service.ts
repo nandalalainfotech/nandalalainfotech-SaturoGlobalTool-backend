@@ -704,7 +704,7 @@ async function ReportData(worksheet, temp, assaycount, i, unitsinglevalues, unit
 
     if (assaycount.unitSlno2 != null) {
         worksheet.mergeCells('Z' + temp);
-        worksheet.getCell('Z' + temp).value = assaycount.unitSlno2.unit;
+        worksheet.getCell('Z' + temp).value = unescape(assaycount.unitSlno2.unit);
         worksheet.getCell('Z' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
         worksheet.getCell('Z' + temp).font = {
             size: 10,
@@ -730,7 +730,7 @@ async function ReportData(worksheet, temp, assaycount, i, unitsinglevalues, unit
 
     if (assaycount.unitedSlno2 != null) {
         worksheet.mergeCells('AC' + temp);
-        worksheet.getCell('AC' + temp).value = assaycount.unitedSlno2?.united;
+        worksheet.getCell('AC' + temp).value = unescape(assaycount.unitedSlno2?.united);
         worksheet.getCell('AC' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
         worksheet.getCell('AC' + temp).font = {
             size: 10,
@@ -775,7 +775,7 @@ async function ReportData(worksheet, temp, assaycount, i, unitsinglevalues, unit
         for (let z = 0; z < unitsinglevalues.length; z++) {
             if (assaycount.singleUnit == unitsinglevalues[z].id) {
                 worksheet.mergeCells('AH' + temp);
-                worksheet.getCell('AH' + temp).value = unitsinglevalues[z].unit;
+                worksheet.getCell('AH' + temp).value = unescape(unitsinglevalues[z].unit);
                 worksheet.getCell('AH' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
                 worksheet.getCell('AH' + temp).font = {
                     size: 10,
@@ -805,7 +805,7 @@ async function ReportData(worksheet, temp, assaycount, i, unitsinglevalues, unit
         for (let z = 0; z < unitlowendvalues.length; z++) {
             if (assaycount.highLowUnit == unitlowendvalues[z].id) {
                 worksheet.mergeCells('AK' + temp);
-                worksheet.getCell('AK' + temp).value = unitlowendvalues[z].united;
+                worksheet.getCell('AK' + temp).value = unescape(unitlowendvalues[z].united);
                 worksheet.getCell('AK' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
                 worksheet.getCell('AK' + temp).font = {
                     size: 10,
@@ -908,7 +908,7 @@ async function ReportData(worksheet, temp, assaycount, i, unitsinglevalues, unit
         for (let z = 0; z < unitsinglevalues.length; z++) {
             if (assaycount.unit == unitsinglevalues[z].id) {
                 worksheet.mergeCells('AS' + temp);
-                worksheet.getCell('AS' + temp).value = unitsinglevalues[z].unit;
+                worksheet.getCell('AS' + temp).value = unescape(unitsinglevalues[z].unit);
                 worksheet.getCell('AS' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
                 worksheet.getCell('AS' + temp).font = {
                     size: 10,
@@ -938,7 +938,7 @@ async function ReportData(worksheet, temp, assaycount, i, unitsinglevalues, unit
         for (let z = 0; z < unitlowendvalues.length; z++) {
             if (assaycount.units == unitlowendvalues[z].id) {
                 worksheet.mergeCells('AV' + temp);
-                worksheet.getCell('AV' + temp).value = unitlowendvalues[z].united;
+                worksheet.getCell('AV' + temp).value = unescape(unitlowendvalues[z].united);
                 worksheet.getCell('AV' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
                 worksheet.getCell('AV' + temp).font = {
                     size: 10,
