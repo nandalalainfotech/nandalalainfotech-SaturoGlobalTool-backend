@@ -1,14 +1,27 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Header, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { TaskallocationDTO } from "src/dto/Taskallocation001wb.dto";
 import { Taskallocation001wb } from "src/entity/Taskallocation001wb";
+import { RolesGuard } from "src/role/role.guard";
 import { TaskallocationService } from "src/service/Taskallocation.service";
-
+import { Response } from "express";
+import { Request } from "supertest";
  
-@Controller('/testandreportstudio/api/taskallocation')
+@Controller('/testandreportstudio/api/taskallocation')		
 export class TaskAllocationController {
 	constructor(private readonly taskallocationService: TaskallocationService) { }
+
+	@UseGuards(JwtAuthGuard, RolesGuard)
+    @Get('excel')
+    @Header("Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    @Header("Content-Disposition",
+        "attachment; filename=" + "Attendace Report" + ".xlsx")
+    
+    async downloadExcel( @Req() request: Request, @Res() response: Response) {
+        return await this.taskallocationService.downloadExcel( request, response);
+    }
 
 	@Post('save')
 	@UseInterceptors(FileInterceptor('file'))
