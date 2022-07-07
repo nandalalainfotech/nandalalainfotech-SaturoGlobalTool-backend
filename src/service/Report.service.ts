@@ -23,30 +23,39 @@ var zipdir = require('zip-dir');
 var path = require('path');
 const excel = require('exceljs');
 let output = "";
+var unitsinglevalues: Unitsinglevalue001mb[] = [];
+var unitlowendvalues: Unitlowendvalue001mb[] = [];
 
 @Injectable()
 export class ReportsService {
     constructor(@InjectRepository(Assay001wb) private readonly assayRepository: Repository<Assay001wb>,
         @InjectRepository(Ligand001wb) private readonly ligandRepository: Repository<Ligand001wb>,
-        @InjectRepository(Taskallocation001wb) private readonly taskAllocateRepository: Repository<Taskallocation001wb>) {
+        @InjectRepository(Taskallocation001wb) private readonly taskAllocateRepository: Repository<Taskallocation001wb>,
+        @InjectRepository(Unitsinglevalue001mb) private readonly unitsinglevalueRepository: Repository<Unitsinglevalue001mb>,
+        @InjectRepository(Unitlowendvalue001mb) private readonly unitlowendvalueRepository: Repository<Unitlowendvalue001mb>) {
 
     }
 
     async downloadTanExcel(reviewerTan: any, @Req() request: Request, @Res() response: Response) {
 
-    
-  
+
+
         let ligands: Ligand001wb[] = [];
         ligands = await this.ligandRepository.find({ where: { tanNumber: reviewerTan } });
         let ligandids = [];
         for (let i = 0; i < ligands.length; i++) {
             ligandids.push(ligands[i].ligandId);
         }
-        let assaysTan: Assay001wb[]=[];
-        let assays: Assay001wb[]=[];
+        let assaysTan: Assay001wb[] = [];
+
+        let assays: Assay001wb[] = [];
         // assays = await this.assayRepository.find({ relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
         assaysTan = await this.assayRepository.find({ where: { ligandSlno2: { ligandId: In(ligandids) } }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
-    
+
+
+        unitsinglevalues = await this.unitsinglevalueRepository.find();
+        unitlowendvalues = await this.unitlowendvalueRepository.find();
+
         for (let assay001wb of assaysTan) {
             assay001wb.administration = unescape(assay001wb.administration);
             assay001wb.procedure = unescape(assay001wb.procedure);
@@ -83,6 +92,7 @@ export class ReportsService {
             assay001wb.variant = unescape(assay001wb.variant);
             assay001wb.unit = unescape(assay001wb.unit);
             assay001wb.units = unescape(assay001wb.units);
+            
             assay001wb.collectionId = unescape(assay001wb.collectionId);
             assay001wb.conditionType = unescape(assay001wb.conditionType);
             assay001wb.highLowUnit = unescape(assay001wb.highLowUnit);
@@ -149,8 +159,8 @@ export class ReportsService {
             }
             assays.push(assay001wb);
         }
-        
-      
+
+
         if (assays.length < 0) {
             return;
         }
@@ -168,25 +178,25 @@ export class ReportsService {
                 // console.log("testing",i, tempTan, assays[tempTan].ligandSlno2.tanNumber, assays[i].ligandSlno2.tanNumber, assays[tempTan].ligandSlno2.tanNumber == assays[i].ligandSlno2.tanNumber )
                 if (assays[tempTan].ligandSlno2?.tanNumber == assays[i].ligandSlno2?.tanNumber) {
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i);
+                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
-                    let taskallocates= await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
-                    batchNo=taskallocates.cbatchNo
-                     initRow++;
+                    let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
+                    batchNo = taskallocates.cbatchNo
+                    initRow++;
                 } else {
-                    await workbook.xlsx.writeFile('./EXCEL/'+batchNo+'_export_' + tanNumber + '.xlsx');
+                    await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
                     initRow = 3;
                     workbook = new excel.Workbook();
                     worksheet = await ReportHeader(workbook);
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i);
+                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
-                    let taskallocates= await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
-                    batchNo=taskallocates.cbatchNo
+                    let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
+                    batchNo = taskallocates.cbatchNo
                     initRow++;
                 }
             }
-            await workbook.xlsx.writeFile('./EXCEL/'+batchNo+'_export_' + tanNumber + '.xlsx');
+            await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
 
             var buffer = await zipdir('./EXCEL');
             response.send(buffer);
@@ -208,27 +218,26 @@ export class ReportsService {
 
     async downloadExcel(@Req() request: Request, @Res() response: Response) {
 
-      
-        let taslallocations: Taskallocation001wb[] = [];
-        let taslallocationsTan= [];
-        taslallocations=await this.taskAllocateRepository.find();
 
-        for(let i=0; i<taslallocations.length; i++){
-        taslallocationsTan.push(taslallocations[i].curatorTanNo)
+        let taslallocations: Taskallocation001wb[] = [];
+        let taslallocationsTan = [];
+        taslallocations = await this.taskAllocateRepository.find();
+
+        for (let i = 0; i < taslallocations.length; i++) {
+            taslallocationsTan.push(taslallocations[i].curatorTanNo)
         }
 
         let ligands: Ligand001wb[] = [];
         ligands = await this.ligandRepository.find({ where: { tanNumber: In(taslallocationsTan) } });
-      
+
         let ligandids = [];
         for (let i = 0; i < ligands.length; i++) {
             ligandids.push(ligands[i].ligandId);
         }
 
-        let assaysTan: Assay001wb[]=[];
-        let assays: Assay001wb[]=[];
-        assaysTan = await this.assayRepository.find({  where: { ligandSlno2: { ligandId: In(ligandids) } } ,relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
-        
+        let assaysTan: Assay001wb[] = [];
+        let assays: Assay001wb[] = [];
+        assaysTan = await this.assayRepository.find({ where: { ligandSlno2: { ligandId: In(ligandids) } }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
         for (let assay001wb of assaysTan) {
             assay001wb.administration = unescape(assay001wb.administration);
             assay001wb.procedure = unescape(assay001wb.procedure);
@@ -331,7 +340,7 @@ export class ReportsService {
             }
             assays.push(assay001wb);
         }
-        
+
         if (assays.length < 0) {
             return;
         }
@@ -350,25 +359,25 @@ export class ReportsService {
                 // console.log("testing",i, tempTan, assays[tempTan].ligandSlno2.tanNumber, assays[i].ligandSlno2.tanNumber, assays[tempTan].ligandSlno2.tanNumber == assays[i].ligandSlno2.tanNumber )
                 if (assays[tempTan].ligandSlno2?.tanNumber == assays[i].ligandSlno2?.tanNumber) {
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i);
+                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
-                    let taskallocates= await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
-                    batchNo=taskallocates.cbatchNo
+                    let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
+                    batchNo = taskallocates.cbatchNo
                     initRow++;
                 } else {
-                    await workbook.xlsx.writeFile('./EXCEL/'+batchNo+'_export_' + tanNumber + '.xlsx');
+                    await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
                     initRow = 3;
                     workbook = new excel.Workbook();
                     worksheet = await ReportHeader(workbook);
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i);
+                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
-                    let taskallocates= await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
-                    batchNo=taskallocates.cbatchNo
+                    let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
+                    batchNo = taskallocates.cbatchNo
                     initRow++;
                 }
             }
-            await workbook.xlsx.writeFile('./EXCEL/'+batchNo+'_export_' + tanNumber + '.xlsx');
+            await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
 
             var buffer = await zipdir('./EXCEL');
             response.send(buffer);
@@ -387,8 +396,7 @@ export class ReportsService {
         }
     }
 }
-async function ReportData(worksheet, temp, assaycount, i) {
-    // console.log("assaycount", assaycount);
+async function ReportData(worksheet, temp, assaycount, i, unitsinglevalues, unitlowendvalues) {
     worksheet.mergeCells('A' + temp);
     worksheet.getCell('A' + temp).value = assaycount.ligandSlno2?.tanNumber;
     worksheet.getCell('A' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
@@ -431,14 +439,14 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     if (assaycount.ligandSlno2?.ligandTypeSlno2?.ligandtype != null) {
-    worksheet.mergeCells('F' + temp);
-    worksheet.getCell('F' + temp).value = assaycount.ligandSlno2?.ligandTypeSlno2.ligandtype;
-    worksheet.getCell('F' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-    worksheet.getCell('F' + temp).font = {
-        size: 10,
-        name: 'Calibri',
-    };
-   }
+        worksheet.mergeCells('F' + temp);
+        worksheet.getCell('F' + temp).value = assaycount.ligandSlno2?.ligandTypeSlno2.ligandtype;
+        worksheet.getCell('F' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+        worksheet.getCell('F' + temp).font = {
+            size: 10,
+            name: 'Calibri',
+        };
+    }
 
     worksheet.mergeCells('G' + temp);
     worksheet.getCell('G' + temp).value = assaycount.ligandSlno2?.identifier1;
@@ -764,14 +772,18 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     if (assaycount.singleUnit != null) {
-    worksheet.mergeCells('AH' + temp);
-    worksheet.getCell('AH' + temp).value = assaycount.singleUnit;
-    worksheet.getCell('AH' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-    worksheet.getCell('AH' + temp).font = {
-        size: 10,
-        name: 'Calibri',
-    };
-  }
+        for (let z = 0; z < unitsinglevalues.length; z++) {
+            if (assaycount.singleUnit == unitsinglevalues[z].id) {
+                worksheet.mergeCells('AH' + temp);
+                worksheet.getCell('AH' + temp).value = unitsinglevalues[z].unit;
+                worksheet.getCell('AH' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+                worksheet.getCell('AH' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };
+            }
+        }
+    }
 
     worksheet.mergeCells('AI' + temp);
     worksheet.getCell('AI' + temp).value = assaycount.highCondition;
@@ -790,13 +802,18 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     if (assaycount.highLowUnit != null) {
-    worksheet.mergeCells('AK' + temp);
-    worksheet.getCell('AK' + temp).value = assaycount.highLowUnit;
-    worksheet.getCell('AK' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-    worksheet.getCell('AK' + temp).font = {
-        size: 10,
-        name: 'Calibri',
-    };
+        for (let z = 0; z < unitlowendvalues.length; z++) {
+            if (assaycount.highLowUnit == unitlowendvalues[z].id) {
+                worksheet.mergeCells('AK' + temp);
+                worksheet.getCell('AK' + temp).value = unitlowendvalues[z].united;
+                worksheet.getCell('AK' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+                worksheet.getCell('AK' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };
+            }
+        }
+
     }
 
 
@@ -815,7 +832,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
 
     if ((assaycount.dataLocator2 != null) && (assaycount.dataLocator2 != "") && (assaycount.dataLocator2 != "undefined") && (assaycount.dataLocator2 != "null")) {
         worksheet.mergeCells('AL' + temp);
-        worksheet.getCell('AL' + temp).value = "Figure "+ assaycount.dataLocator2;
+        worksheet.getCell('AL' + temp).value = "Figure " + assaycount.dataLocator2;
         worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
         worksheet.getCell('AL' + temp).font = {
             size: 10,
@@ -825,7 +842,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
 
     if ((assaycount.dataLocator3 != null) && (assaycount.dataLocator3 != "") && (assaycount.dataLocator3 != "undefined") && (assaycount.dataLocator3 != "null")) {
         worksheet.mergeCells('AL' + temp);
-        worksheet.getCell('AL' + temp).value = "Page " +assaycount.dataLocator3 + " (text)";
+        worksheet.getCell('AL' + temp).value = "Page " + assaycount.dataLocator3 + " (text)";
         worksheet.getCell('AL' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
         worksheet.getCell('AL' + temp).font = {
             size: 10,
@@ -854,7 +871,7 @@ async function ReportData(worksheet, temp, assaycount, i) {
     }
 
     worksheet.mergeCells('AO' + temp);
-    worksheet.getCell('AO' + temp).value =assaycount.parameter;
+    worksheet.getCell('AO' + temp).value = assaycount.parameter;
     worksheet.getCell('AO' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
     worksheet.getCell('AO' + temp).font = {
         size: 10,
@@ -887,13 +904,19 @@ async function ReportData(worksheet, temp, assaycount, i) {
         name: 'Calibri',
     };
 
-    worksheet.mergeCells('AS' + temp);
-    worksheet.getCell('AS' + temp).value = assaycount.unit;
-    worksheet.getCell('AS' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-    worksheet.getCell('AS' + temp).font = {
-        size: 10,
-        name: 'Calibri',
-    };
+    if (assaycount.unit != null) {
+        for (let z = 0; z < unitsinglevalues.length; z++) {
+            if (assaycount.unit == unitsinglevalues[z].id) {
+                worksheet.mergeCells('AS' + temp);
+                worksheet.getCell('AS' + temp).value = unitsinglevalues[z].unit;
+                worksheet.getCell('AS' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+                worksheet.getCell('AS' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };
+            }
+        }
+    }
 
     worksheet.mergeCells('AT' + temp);
     worksheet.getCell('AT' + temp).value = assaycount.highEndValue;
@@ -911,13 +934,19 @@ async function ReportData(worksheet, temp, assaycount, i) {
         name: 'Calibri',
     };
 
-    worksheet.mergeCells('AV' + temp);
-    worksheet.getCell('AV' + temp).value = assaycount.units;
-    worksheet.getCell('AV' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
-    worksheet.getCell('AV' + temp).font = {
-        size: 10,
-        name: 'Calibri',
-    };
+    if (assaycount.units != null) {
+        for (let z = 0; z < unitlowendvalues.length; z++) {
+            if (assaycount.units == unitlowendvalues[z].id) {
+                worksheet.mergeCells('AV' + temp);
+                worksheet.getCell('AV' + temp).value = unitlowendvalues[z].united;
+                worksheet.getCell('AV' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
+                worksheet.getCell('AV' + temp).font = {
+                    size: 10,
+                    name: 'Calibri',
+                };
+            }
+        }
+    }
 
     worksheet.mergeCells('AW' + temp);
     worksheet.getCell('AW' + temp).value = assaycount.nonNumeric;
@@ -994,14 +1023,14 @@ async function ReportData(worksheet, temp, assaycount, i) {
     };
 
     if (assaycount.gender != null) {
-    worksheet.mergeCells('BF' + temp);
-    worksheet.getCell('BF' + temp).value = assaycount.gender;
-    worksheet.getCell('BF' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
-    worksheet.getCell('BF' + temp).font = {
-        size: 10,
-        name: 'Calibri',
-    };
-   }
+        worksheet.mergeCells('BF' + temp);
+        worksheet.getCell('BF' + temp).value = assaycount.gender;
+        worksheet.getCell('BF' + temp).alignment = { vertical: 'bottom', horizontal: 'left', wrapText: true };
+        worksheet.getCell('BF' + temp).font = {
+            size: 10,
+            name: 'Calibri',
+        };
+    }
 
     worksheet.mergeCells('BG' + temp);
     worksheet.getCell('BG' + temp).value = assaycount.ageGroup;
