@@ -37,7 +37,7 @@ export class TaskallocationService {
         let taskallocation001wbs: Taskallocation001wb[] = [];
         let reviewers: User001mb[] = [];
         reviewers = await this.userRepository.find({ relations: ["role"], where: { roleid: 3 } });
-        for (let i = 0; i < sheet.length; i++) {
+        for (let i = 0; i < sheet.length-1; i++) {
             const taskallocation001wb = new Taskallocation001wb();
             taskallocation001wb.curatorId = i + 1;
             taskallocation001wb.curatorName = sheet[i].CURATORNAME;
