@@ -683,7 +683,7 @@ async function ReportData(worksheet, temp, assaycount, i, unitsinglevalues, unit
         name: 'Calibri',
     };
 
-    if (assaycount.targetVersion != "" || assaycount.targetVersion != null || assaycount.targetVersion != "NA") {
+    if (assaycount.targetVersion != "" || assaycount.targetVersion != null || assaycount.targetVersion != "NA" || assaycount.targetVersion != undefined) {
         worksheet.mergeCells('X' + temp);
         worksheet.getCell('X' + temp).value = assaycount.target;
         worksheet.getCell('X' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
@@ -703,7 +703,7 @@ async function ReportData(worksheet, temp, assaycount, i, unitsinglevalues, unit
 
     if (assaycount.unitSlno2 != null) {
         worksheet.mergeCells('Z' + temp);
-        worksheet.getCell('Z' + temp).value = unescape(assaycount.unitSlno2.unit);
+        worksheet.getCell('Z' + temp).value = assaycount.unitSlno2.unit;
         worksheet.getCell('Z' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
         worksheet.getCell('Z' + temp).font = {
             size: 10,
@@ -729,7 +729,7 @@ async function ReportData(worksheet, temp, assaycount, i, unitsinglevalues, unit
 
     if (assaycount.unitedSlno2 != null) {
         worksheet.mergeCells('AC' + temp);
-        worksheet.getCell('AC' + temp).value = unescape(assaycount.unitedSlno2?.united);
+        worksheet.getCell('AC' + temp).value = assaycount.unitedSlno2?.united;
         worksheet.getCell('AC' + temp).alignment = { vertical: 'bottom', horizontal: 'left' };
         worksheet.getCell('AC' + temp).font = {
             size: 10,
