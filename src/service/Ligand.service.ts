@@ -231,6 +231,7 @@ export class LigandService {
         console.log("username accept--->>",username);
         const ligand001wbUpdate = new Ligand001wb();
         ligand001wbUpdate.status = "Completed";
+        ligand001wbUpdate.updatedUser = username;
         const ligand001wbs = await this.ligandRepository.find({
             where: { tanNumber: tanNumber }, relations: ["ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
                 "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
@@ -241,6 +242,7 @@ export class LigandService {
             for (let assay of ligand001wb.assay001wbs) {
                 let newAssas = new Assay001wb();
                 newAssas.status = "Completed";
+                newAssas.updatedUser = username;
                 await this.assayRepository.save({ ...assay, ...newAssas });
             }
         }
@@ -265,6 +267,7 @@ console.log("username reject--->>",username);
         // console.log("ligand001wbs", ligand001wbs);
         let ligand001wbUpdate = new Ligand001wb();
         ligand001wbUpdate.status = "Rejected";
+        ligand001wbUpdate.updatedUser = username;
         for (let ligand001wb of ligand001wbs) {
            
             ligand001wbUpdate.ligandUri = "";
@@ -300,6 +303,7 @@ console.log("username reject--->>",username);
 
             let newAssas = new Assay001wb();
             newAssas.status = "Rejected";
+            newAssas.updatedUser = username;
             newAssas.ordinal = "";
             newAssas.assayTypeSlno = null;
             newAssas.assayTypeSlno2 = undefined;

@@ -50,7 +50,7 @@ export class ReportsService {
 
         let assays: Assay001wb[] = [];
         // assays = await this.assayRepository.find({ relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
-        assaysTan = await this.assayRepository.find({ where: { ligandSlno2: { ligandId: In(ligandids) } }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+        assaysTan = await this.assayRepository.find({ where: { ligandSlno2: { ligandId: In(ligandids) }, status: "Completed"}, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
 
 
         unitsinglevalues = await this.unitsinglevalueRepository.find();
@@ -216,8 +216,7 @@ export class ReportsService {
     }
 
 
-    async downloadExcel(@Req() request: Request, @Res() response: Response) {
-
+    async downloadExcel(username: any, @Req() request: Request, @Res() response: Response) {
 
         let taslallocations: Taskallocation001wb[] = [];
         let taslallocationsTan = [];
@@ -237,7 +236,7 @@ export class ReportsService {
 
         let assaysTan: Assay001wb[] = [];
         let assays: Assay001wb[] = [];
-        assaysTan = await this.assayRepository.find({ where: { ligandSlno2: { ligandId: In(ligandids) } }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+        assaysTan = await this.assayRepository.find({ where: { ligandSlno2: { ligandId: In(ligandids) }, status: "Completed", updatedUser:username }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
         for (let assay001wb of assaysTan) {
             assay001wb.administration = unescape(assay001wb.administration);
             assay001wb.procedure = unescape(assay001wb.procedure);

@@ -18,14 +18,14 @@ export class ReportsController {
 
     // @hasRole(Role.Reviewer,Role.Admin)
 	@UseGuards(JwtAuthGuard, RolesGuard)
-    @Get('excel')
+    @Get('excel/:username')
     // @Header("Content-Type",
     //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     // @Header("Content-Disposition",
     //     "attachment; filename=" + "Attendace Report" + ".xlsx")
     
-    async downloadExcel( @Req() request: Request, @Res() response: Response) {
-        return await this.reportsService.downloadExcel( request, response);
+    async downloadExcel( @Param('username') username: any, @Req() request: Request, @Res() response: Response) {
+        return await this.reportsService.downloadExcel( username,request, response);
     }
 
     // @UseGuards(JwtAuthGuard, RolesGuard)

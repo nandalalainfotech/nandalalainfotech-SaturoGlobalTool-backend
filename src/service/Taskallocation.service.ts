@@ -43,10 +43,11 @@ export class TaskallocationService {
             taskallocation001wb.curatorName = sheet[i].CURATORNAME;
             taskallocation001wb.cbatchNo = sheet[i].CBATCHNUMBER;
             taskallocation001wb.curatorTanNo = sheet[i].TANNUMBER;
-            taskallocation001wb.curatorAllocateDate = sheet[i].DATEALLOCATED;
+            const date1 = new Date(sheet[i].DATEALLOCATED);
+            date1.setDate(date1.getDate() + 1);
+            taskallocation001wb.curatorAllocateDate = date1;
             taskallocation001wb.insertUser = taskallocationDTO.insertUser;
             taskallocation001wb.insertDatetime = taskallocationDTO.insertDatetime;
-
 
             // let random = Math.floor(Math.random() * reviewers.length);
             // taskallocation001wb.reviewerName = reviewers[random].username;
@@ -54,8 +55,9 @@ export class TaskallocationService {
             taskallocation001wb.reviewerTanNo = sheet[i].TANNUMBER_1;
             taskallocation001wb.reviewerTanNo = sheet[i].TANNUMBER;
             taskallocation001wb.rbatchNo = sheet[i].RBATCHNUMBER;
-            taskallocation001wb.reviewerAllocateDate = sheet[i].DATEALLOCATED_1;
-            
+            const date2 = new Date(sheet[i].DATEALLOCATED_1);
+            date2.setDate(date2.getDate() + 1);
+            taskallocation001wb.reviewerAllocateDate = date2;
             this.taskAllocateRepository.save(taskallocation001wb);
             taskallocation001wbs.push(taskallocation001wb);
         }
@@ -441,7 +443,7 @@ export class TaskallocationService {
                     bottom: { style: 'thin' },
                     right: { style: 'thin' }
                 };
-                worksheet.getCell('L' + temp).value = task[i].status;
+                worksheet.getCell('L' + temp).value = task[i].reviewerStatus;
 
 
                 worksheet.mergeCells('M' + temp);
@@ -452,7 +454,7 @@ export class TaskallocationService {
                     right: { style: 'thin' }
                 };
                 // ---------reviewer complete date--------
-                worksheet.getCell('M' + temp).value = "";
+                worksheet.getCell('M' + temp).value = task[i].reviewerUpdatedDate;
             }
             return workbook.xlsx.write(response).then(function () {
                 response['status'](200).end();
