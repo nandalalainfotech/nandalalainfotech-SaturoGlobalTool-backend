@@ -3,8 +3,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("taskallocation001wb", { schema: "newsaturo" })
 export class Taskallocation001wb {
-  @PrimaryGeneratedColumn({ type: "int", name: "curator_id" })
-  curatorId: number;
+  @PrimaryGeneratedColumn({ type: "int", name: "taskallocation_slno" })
+  taskallocationSlno: number;
 
   @Column("varchar", { name: "curator_name", nullable: true, length: 50 })
   curatorName: string | null;
@@ -57,7 +57,7 @@ export class Taskallocation001wb {
 
 
   setProperties(taskallocationDTO: TaskallocationDTO) {
-    this.curatorId = taskallocationDTO.curatorId;
+    this.taskallocationSlno = taskallocationDTO.taskallocationSlno;
     this.curatorName = taskallocationDTO.curatorName;
     this.cbatchNo = taskallocationDTO.cbatchNo;
     this.curatorTanNo = taskallocationDTO.curatorTanNo;

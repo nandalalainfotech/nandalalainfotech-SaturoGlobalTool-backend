@@ -1,7 +1,7 @@
 import { Taskallocation001wb } from "src/entity/Taskallocation001wb";
 
 export class TaskallocationDTO {
-    curatorId: number;
+    taskallocationSlno: number;
     curatorName: string;
     cbatchNo: string | null;
     curatorTanNo: string | null;
@@ -20,7 +20,7 @@ export class TaskallocationDTO {
     reviewerUpdatedDate: Date | null;
 
     setProperties(taskallocation001wb: Taskallocation001wb) {
-        this.curatorId = taskallocation001wb.curatorId;
+        this.taskallocationSlno = taskallocation001wb.taskallocationSlno;
         this.curatorName = taskallocation001wb.curatorName;
         this.cbatchNo = taskallocation001wb.cbatchNo;
         this.curatorTanNo = taskallocation001wb.curatorTanNo;
