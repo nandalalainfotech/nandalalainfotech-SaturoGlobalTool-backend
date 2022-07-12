@@ -42,7 +42,6 @@ export class AssayController {
 
 	@Get('findAllByLigandIdAndAssayId/:assayId')
 	findAllByLigandIdAndAssayId(@Param('assayId') assayId: any): Promise<Assay001wb[]> {
-		console.log("assayId---->>");
 		
 		return this.assayService.findAllByLigandIdAndAssayId(assayId);
 	}
@@ -88,5 +87,10 @@ export class AssayController {
 	@Get('findAllByTanligandID/:ligandSlno')
 	findAllByTanligandID(@Param('ligandSlno') ligandSlno: any): Promise<Assay001wb[]> {
 		return this.assayService.findAllByTanligandID(ligandSlno);
+	}
+
+	@Get('findAllAssayTan/:username/:tannumber')
+	findAllAssayTan(@Param('username') username: any, @Param('tannumber') tannumber: any): Promise<Assay001wb[]> {
+		return this.assayService.findAllAssayTan(username, tannumber);
 	}
 }
