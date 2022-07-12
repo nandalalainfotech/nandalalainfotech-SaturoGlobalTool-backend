@@ -82,6 +82,14 @@ export class UserService {
 		return this.userRepository.find({ relations: ["role"] });
 	}
 
+	async allcuratorName(): Promise<User001mb[]> {
+		return this.userRepository.find({ where: { roleid: 2 }, relations: ["role"] });
+	}
+
+	async allReviewerName(): Promise<User001mb[]> {
+		return this.userRepository.find({ where: { roleid: 3 }, relations: ["role"] });
+	}
+
 	async findAllReviewer(): Promise<User001mb[]> {
 		return this.userRepository.find({ relations: [ "role"], where: { roleid: 3 } });
 	}
