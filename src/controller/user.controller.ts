@@ -73,6 +73,20 @@ export class UserController {
 
 	@hasRole(Role.Admin)
 	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('allcuratorName')
+	allcuratorName(): Promise<User001mb[]> {
+		return this.userService.allcuratorName();
+	}
+
+	@hasRole(Role.Admin)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('allReviewerName')
+	allReviewerName(): Promise<User001mb[]> {
+		return this.userService.allReviewerName();
+	}
+
+	@hasRole(Role.Admin)
+	@UseGuards(JwtAuthGuard, RolesGuard)
 	@Get('findCuratorAll')
 	findCuratorAll(): Promise<User001mb[]> {
 		return this.userService.findCuratorAll();
