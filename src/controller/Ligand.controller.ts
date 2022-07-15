@@ -88,10 +88,10 @@ export class LigandController {
 	// 	return this.ligandService.updateStatus(tanNumber);
 	// }
 	@UseGuards(JwtAuthGuard, RolesGuard)
-	@Put('updateStatus/:ligandId/:tanNumber')
-	updateStatus(@Param('ligandId') ligandId: any,@Param('tanNumber') tanNumber: any): Promise<Ligand001wb> {
+	@Put('updateStatus/:username/:ligandId/:tanNumber')
+	updateStatus(@Param('username') username: any,@Param('ligandId') ligandId: any,@Param('tanNumber') tanNumber: any): Promise<Ligand001wb> {
 		
-		return this.ligandService.updateStatus(ligandId, tanNumber);
+		return this.ligandService.updateStatus(username,ligandId, tanNumber);
 	}
 
 	// @UseGuards(JwtAuthGuard, RolesGuard)
