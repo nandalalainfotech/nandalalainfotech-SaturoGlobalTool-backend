@@ -33,4 +33,16 @@ export class ReportsController {
     async downloadTanExcel(@Param('reviewerTan') reviewerTan: any, @Req() request: Request, @Res() response: Response) {
         return await this.reportsService.downloadTanExcel(reviewerTan, request, response);
     }
+
+    // @UseGuards(JwtAuthGuard, RolesGuard)
+    @Get('batchNumberExportExcel/:username/:rbatchNo')
+    async batchNumberExportExcel(@Param('username') username: any,@Param('rbatchNo') rbatchNo: any, @Req() request: Request, @Res() response: Response) {
+        return await this.reportsService.batchNumberExportExcel(username, rbatchNo,request, response);
+    }
+
+    // @UseGuards(JwtAuthGuard, RolesGuard)
+    @Get('startEndDateExportExcel/:username/:startDate/:endDate')
+    async startEndDateExportExcel(@Param('username') username: any,@Param('startDate') startDate: any,@Param('endDate') endDate: any, @Req() request: Request, @Res() response: Response) {
+        return await this.reportsService.startEndDateExportExcel(username, startDate,endDate,request, response);
+    }
 }
