@@ -54,6 +54,12 @@ export class TaskAllocationController {
     }
 
 	@UseGuards(JwtAuthGuard)
+    @Get('findByStartEndDate/:username/:startDate/:endDate')
+    findByStartEndDate(@Param('username') username: any,@Param('startDate') startDate: any,@Param('endDate') endDate: any): Promise<Taskallocation001wb[]> {
+        return this.taskallocationService.findByStartEndDate(username,startDate,endDate);
+    }
+
+	@UseGuards(JwtAuthGuard)
 	@Delete('delete/:id')
 	remove(@Param('id') id: number): Promise<void> {
 		return this.taskallocationService.remove(id);

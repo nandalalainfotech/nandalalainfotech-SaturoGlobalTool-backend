@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { TaskallocationDTO } from "src/dto/Taskallocation001wb.dto";
 import { Taskallocation001wb } from "src/entity/Taskallocation001wb";
 import { User001mb } from "src/entity/User001mb";
-import { Repository } from "typeorm";
+import { Repository, Between } from "typeorm";
 import { Response } from "express";
 import { Request } from "supertest";
 
@@ -83,6 +83,24 @@ export class TaskallocationService {
     async findByReviewerTanNo(username: any): Promise<Taskallocation001wb[]> {
         return await this.taskAllocateRepository.find({ where: { reviewerName: username } });
     }
+
+    async findByStartEndDate(username: any, startDate: any, endDate: any): Promise<Taskallocation001wb[]> {
+        // if (startDate != endDate) {
+            let sDate = new Date(startDate);
+            sDate.setDate(sDate.getDate() - 1);
+            let eDate = new Date(endDate);
+            eDate.setDate(eDate.getDate() + 1);
+
+            return await this.taskAllocateRepository.find({ where: { reviewerName: username, reviewerUpdatedDate: Between(sDate, eDate), reviewerStatus: "Completed" } });
+        // }
+        // else {
+        //     let sDate = new Date(startDate);
+        //     let eDate = new Date(endDate);
+        //     return await this.taskAllocateRepository.find({ where: { reviewerName: username, reviewerUpdatedDate: sDate, reviewerStatus: "Completed" } });
+        // }
+    }
+
+
 
     findOne(taskallocationSlno: number): Promise<Taskallocation001wb> {
         return this.taskAllocateRepository.findOne(taskallocationSlno);
