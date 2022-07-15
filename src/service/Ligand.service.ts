@@ -200,9 +200,10 @@ export class LigandService {
         return this.ligandRepository.findOne({ where: { ligandId: id }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
 
-    async updateStatus(ligandId: any, tanNumber: any): Promise<Ligand001wb> {
+    async updateStatus(username:any,ligandId: any, tanNumber: any): Promise<Ligand001wb> {
         const ligand001wbUpdate = new Ligand001wb();
         ligand001wbUpdate.status = "Submitted to QC";
+        ligand001wbUpdate.updatedUser = username;
         ligand001wbUpdate.updatedDatetime = new Date();
         const ligand001wbs = await this.ligandRepository.find({
             where: { tanNumber: tanNumber }, relations: ["ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
@@ -214,6 +215,8 @@ export class LigandService {
             for (let assay of ligand001wb.assay001wbs) {
                 let newAssas = new Assay001wb();
                 newAssas.status = "Submitted to QC";
+                newAssas.updatedUser = username;
+                newAssas.updatedDatetime = new Date();
                 await this.assayRepository.save({ ...assay, ...newAssas });
             }
         }
