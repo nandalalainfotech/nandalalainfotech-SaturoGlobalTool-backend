@@ -84,6 +84,16 @@ export class TaskallocationService {
         return await this.taskAllocateRepository.find({ where: { reviewerName: username } });
     }
 
+    async findByCuratorStartEndDate(username: any, startDate: any, endDate: any): Promise<Taskallocation001wb[]> {
+            let sDate = new Date(startDate);
+            sDate.setDate(sDate.getDate() - 1);
+            let eDate = new Date(endDate);
+            eDate.setDate(eDate.getDate() + 1);
+           
+            let sekar= await this.taskAllocateRepository.find({ where: { curatorName: username, updatedDatetime: Between(sDate, eDate), status: "Submitted to QC" } });
+            return sekar;
+    }
+
     async findByStartEndDate(username: any, startDate: any, endDate: any): Promise<Taskallocation001wb[]> {
         // if (startDate != endDate) {
             let sDate = new Date(startDate);

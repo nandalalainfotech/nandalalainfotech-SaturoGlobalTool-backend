@@ -54,6 +54,12 @@ export class TaskAllocationController {
     }
 
 	@UseGuards(JwtAuthGuard)
+    @Get('findByCuratorStartEndDate/:username/:startDate/:endDate')
+    findByCuratorStartEndDate(@Param('username') username: any,@Param('startDate') startDate: any,@Param('endDate') endDate: any): Promise<Taskallocation001wb[]> {
+		return this.taskallocationService.findByCuratorStartEndDate(username,startDate,endDate);
+    }
+
+	@UseGuards(JwtAuthGuard)
     @Get('findByStartEndDate/:username/:startDate/:endDate')
     findByStartEndDate(@Param('username') username: any,@Param('startDate') startDate: any,@Param('endDate') endDate: any): Promise<Taskallocation001wb[]> {
         return this.taskallocationService.findByStartEndDate(username,startDate,endDate);
