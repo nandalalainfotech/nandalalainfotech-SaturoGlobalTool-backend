@@ -1,4 +1,4 @@
-import { Injectable, Req, Res } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Req, Res } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Response } from "express";
 import { Assay001wb } from "src/entity/Assay001wb";
@@ -364,7 +364,7 @@ export class ReportsService {
                     await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
-                    batchNo = taskallocates.cbatchNo
+                    batchNo = taskallocates.rbatchNo
                     initRow++;
                 } else {
                     await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
@@ -375,25 +375,31 @@ export class ReportsService {
                     await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
-                    batchNo = taskallocates.cbatchNo
+                    batchNo = taskallocates.rbatchNo
                     initRow++;
                 }
             }
-            await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
+            if (batchNo != null) {
+                await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
 
-            var buffer = await zipdir('./EXCEL');
-            response.send(buffer);
+                var buffer = await zipdir('./EXCEL');
+                response.send(buffer);
 
-            const directory = './EXCEL';
-            fs.readdir(directory, (err, files) => {
-                if (err) throw err;
+                const directory = './EXCEL';
+                fs.readdir(directory, (err, files) => {
+                    if (err) throw err;
 
-                for (const file of files) {
-                    fs.unlink(path.join(directory, file), err => {
-                        if (err) throw err;
-                    });
-                }
-            });
+                    for (const file of files) {
+                        fs.unlink(path.join(directory, file), err => {
+                            if (err) throw err;
+                        });
+                    }
+                });
+            }
+            else {
+                throw new HttpException('This Batch Number have no Data!', HttpStatus.NOT_FOUND);
+
+            }
 
         }
     }
@@ -401,11 +407,11 @@ export class ReportsService {
 
     async startEndDateExportExcel(username: any, startDate: any, endDate: any, @Req() request: Request, @Res() response: Response) {
 
-    let sDate = new Date(startDate);
-    // sDate = sDate.getDate() -1;
-    sDate.setDate(sDate.getDate() - 1);
-    let eDate = new Date(endDate);
-    eDate.setDate(eDate.getDate() + 1);
+        let sDate = new Date(startDate);
+        // sDate = sDate.getDate() -1;
+        sDate.setDate(sDate.getDate() - 1);
+        let eDate = new Date(endDate);
+        eDate.setDate(eDate.getDate() + 1);
 
         let ligands: Ligand001wb[] = [];
         ligands = await this.ligandRepository.find({ where: { updatedUser: username, status: "Completed" } });
@@ -551,7 +557,199 @@ export class ReportsService {
                     await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
-                  batchNo = taskallocates.cbatchNo
+                    batchNo = taskallocates.rbatchNo
+                    initRow++;
+                } else {
+                    await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
+                    initRow = 3;
+                    workbook = new excel.Workbook();
+                    worksheet = await ReportHeader(workbook);
+                    let assaycount = assays[i];
+                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    tanNumber = assays[i].ligandSlno2?.tanNumber;
+                    let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
+                    batchNo = taskallocates.rbatchNo
+                    initRow++;
+                }
+            }
+            if (batchNo != null) {
+                await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
+
+                var buffer = await zipdir('./EXCEL');
+                response.send(buffer);
+
+                const directory = './EXCEL';
+                fs.readdir(directory, (err, files) => {
+                    if (err) throw err;
+
+                    for (const file of files) {
+                        fs.unlink(path.join(directory, file), err => {
+                            if (err) throw err;
+                        });
+                    }
+                });
+            }
+            else {
+                throw new HttpException('This Date have no Data!', HttpStatus.NOT_FOUND);
+
+            }
+        }
+    }
+
+
+    async curatorStartEndDateExportExcel(username: any, startDate: any, endDate: any, @Req() request: Request, @Res() response: Response) {
+
+        let sDate = new Date(startDate);
+        sDate.setDate(sDate.getDate() - 1);
+        let eDate = new Date(endDate);
+        eDate.setDate(eDate.getDate() + 1);
+
+        let ligands: Ligand001wb[] = [];
+        ligands = await this.ligandRepository.find({ where: { updatedUser: username, status: "Submitted to QC" } });
+        let ligandids = [];
+        for (let i = 0; i < ligands.length; i++) {
+            ligandids.push(ligands[i].ligandId);
+        }
+
+        let assaysTan: Assay001wb[] = [];
+
+        let assays: Assay001wb[] = [];
+
+        assaysTan = await this.assayRepository.find({
+            where: { updatedDatetime: Between(sDate, eDate), ligandSlno2: { ligandId: In(ligandids) } },
+            relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"]
+        });
+
+
+        unitsinglevalues = await this.unitsinglevalueRepository.find();
+        unitlowendvalues = await this.unitlowendvalueRepository.find();
+
+        for (let assay001wb of assaysTan) {
+            assay001wb.administration = unescape(assay001wb.administration);
+            assay001wb.procedure = unescape(assay001wb.procedure);
+            assay001wb.ligandSvalue = unescape(assay001wb.ligandSvalue);
+            assay001wb.ligandHvalue = unescape(assay001wb.ligandHvalue);
+            assay001wb.ligandLvalue = unescape(assay001wb.ligandLvalue);
+            assay001wb.conditionMaterial = unescape(assay001wb.conditionMaterial);
+            assay001wb.conditionMaterialid = unescape(assay001wb.conditionMaterialid);
+            assay001wb.singleCondition = unescape(assay001wb.singleCondition);
+            assay001wb.highCondition = unescape(assay001wb.highCondition);
+            assay001wb.lowCondition = unescape(assay001wb.lowCondition);
+            assay001wb.dataLocator1 = unescape(assay001wb.dataLocator1);
+            assay001wb.dataLocator2 = unescape(assay001wb.dataLocator2);
+            assay001wb.dataLocator3 = unescape(assay001wb.dataLocator3);
+            assay001wb.parameter = unescape(assay001wb.parameter);
+            assay001wb.parameterDetail = unescape(assay001wb.parameterDetail);
+            assay001wb.singleValue = unescape(assay001wb.singleValue);
+            assay001wb.highEndValue = unescape(assay001wb.highEndValue);
+            assay001wb.lowEndValue = unescape(assay001wb.lowEndValue);
+            assay001wb.nonNumeric = unescape(assay001wb.nonNumeric);
+            assay001wb.remark = unescape(assay001wb.remark);
+            assay001wb.cell = unescape(assay001wb.cell);
+            assay001wb.cellDetail = unescape(assay001wb.cellDetail);
+            assay001wb.organ = unescape(assay001wb.organ);
+            assay001wb.organDetail = unescape(assay001wb.organDetail);
+            assay001wb.species = unescape(assay001wb.species);
+            assay001wb.speciesDetail = unescape(assay001wb.speciesDetail);
+            assay001wb.ageGroup = unescape(assay001wb.ageGroup);
+            assay001wb.targetVersion = unescape(assay001wb.targetVersion);
+            assay001wb.collectionId1 = unescape(assay001wb.collectionId1);
+            assay001wb.original = unescape(assay001wb.original);
+            assay001wb.acronym = unescape(assay001wb.acronym);
+            assay001wb.organism = unescape(assay001wb.organism);
+            assay001wb.variant = unescape(assay001wb.variant);
+            assay001wb.unit = unescape(assay001wb.unit);
+            assay001wb.units = unescape(assay001wb.units);
+
+            assay001wb.collectionId = unescape(assay001wb.collectionId);
+            assay001wb.conditionType = unescape(assay001wb.conditionType);
+            assay001wb.highLowUnit = unescape(assay001wb.highLowUnit);
+            assay001wb.status = unescape(assay001wb.status);
+            if (assay001wb.ligandSlno2) {
+                assay001wb.ligandSlno2.tanNumber = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.tanNumber : "");
+                assay001wb.ligandSlno2.collection = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.collection : "");
+                assay001wb.ligandSlno2.ligandDetail = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.ligandDetail : "");
+                assay001wb.ligandSlno2.identifier1 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.identifier1 : "");
+                assay001wb.ligandSlno2.identifier2 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.identifier2 : "");
+                assay001wb.ligandSlno2.identifier3 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.identifier3 : "");
+                assay001wb.ligandSlno2.collectionId = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.collectionId : "");
+                assay001wb.ligandSlno2.locator = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.locator : "");
+                assay001wb.ligandSlno2.diseaseName1 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.diseaseName1 : "");
+                assay001wb.ligandSlno2.diseaseName2 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.diseaseName2 : "");
+                assay001wb.ligandSlno2.diseaseName3 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.diseaseName3 : "");
+            } else {
+                assay001wb.ligandSlno2 = new Ligand001wb();
+            }
+            if (assay001wb.assayTypeSlno2) {
+                assay001wb.assayTypeSlno2.assayType = unescape(assay001wb.assayTypeSlno2 ? assay001wb.assayTypeSlno2.assayType : null);
+            } else {
+                assay001wb.assayTypeSlno2 = new Assaytype001mb();
+            }
+            if (assay001wb.toxiCitySlno2) {
+                assay001wb.toxiCitySlno2.toxiCity = unescape(assay001wb.toxiCitySlno2 ? assay001wb.toxiCitySlno2.toxiCity : null);
+            } else {
+                assay001wb.toxiCitySlno2 = new Toxicity001mb();
+            }
+            if (assay001wb.routeSlno2) {
+                assay001wb.routeSlno2.route = unescape(assay001wb.routeSlno2 ? assay001wb.routeSlno2.route : null);
+            } else {
+                assay001wb.routeSlno2 = new Routeofadministration001mb();
+            }
+            if (assay001wb.unitSlno2) {
+                assay001wb.unitSlno2.unit = unescape(assay001wb.unitSlno2 ? assay001wb.unitSlno2.unit : null);
+            } else {
+                assay001wb.unitSlno2 = new Unitsinglevalue001mb();
+            }
+            if (assay001wb.unitedSlno2) {
+                assay001wb.unitedSlno2.united = unescape(assay001wb.unitedSlno2 ? assay001wb.unitedSlno2.united : null);
+            } else {
+                assay001wb.unitedSlno2 = new Unitlowendvalue001mb();
+            }
+            if (assay001wb.categorySlno2) {
+                assay001wb.categorySlno2.category = unescape(assay001wb.categorySlno2 ? assay001wb.categorySlno2.category : null);
+            } else {
+                assay001wb.categorySlno2 = new Category001mb();
+            }
+            if (assay001wb.functionSlno2) {
+                assay001wb.functionSlno2.function = unescape(assay001wb.functionSlno2 ? assay001wb.functionSlno2.function : null);
+            } else {
+                assay001wb.functionSlno2 = new Categoryfunction001mb();
+            }
+            if (assay001wb.originalPrefixSlno2) {
+                assay001wb.originalPrefixSlno2.originalPrefix = unescape(assay001wb.originalPrefixSlno2 ? assay001wb.originalPrefixSlno2.originalPrefix : null);
+            } else {
+                assay001wb.originalPrefixSlno2 = new Originalprefix001mb();
+            }
+            if (assay001wb.typeSlno2) {
+                assay001wb.typeSlno2.type = unescape(assay001wb.typeSlno2 ? assay001wb.typeSlno2.type : null);
+            } else {
+                assay001wb.typeSlno2 = new Type001mb();
+            }
+            assays.push(assay001wb);
+        }
+
+
+        if (assays.length < 0) {
+            return;
+        }
+        else {
+            let workbook: any = null;
+            let worksheet: any = null;
+            let initRow = 3;
+            let flag: boolean = true;
+            let tanNumber: string = null;
+            let batchNo: string = null;
+            workbook = new excel.Workbook();
+            worksheet = await ReportHeader(workbook);
+            for (let i = 0; i < assays.length; i++) {
+                let tempTan = (i == 0) ? 0 : (i != 0) ? (i - 1) : 0;
+
+                if (assays[tempTan].ligandSlno2?.tanNumber == assays[i].ligandSlno2?.tanNumber) {
+                    let assaycount = assays[i];
+                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    tanNumber = assays[i].ligandSlno2?.tanNumber;
+                    let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
+                    batchNo = taskallocates.cbatchNo
                     initRow++;
                 } else {
                     await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
@@ -566,25 +764,220 @@ export class ReportsService {
                     initRow++;
                 }
             }
-            await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
+            if (batchNo != null) {
+                await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
 
-            var buffer = await zipdir('./EXCEL');
-            response.send(buffer);
+                var buffer = await zipdir('./EXCEL');
+                response.send(buffer);
 
-            const directory = './EXCEL';
-            fs.readdir(directory, (err, files) => {
-                if (err) throw err;
+                const directory = './EXCEL';
+                fs.readdir(directory, (err, files) => {
+                    if (err) throw err;
 
-                for (const file of files) {
-                    fs.unlink(path.join(directory, file), err => {
-                        if (err) throw err;
-                    });
-                }
-            });
+                    for (const file of files) {
+                        fs.unlink(path.join(directory, file), err => {
+                            if (err) throw err;
+                        });
+                    }
+                });
+            }
+            else {
+                throw new HttpException('This Date have no Data!', HttpStatus.NOT_FOUND);
 
+            }
         }
     }
 
+
+    async curatorBatchNumberExportExcel(username: any, cbatchNo: any, @Req() request: Request, @Res() response: Response) {
+
+        let taslallocations: Taskallocation001wb[] = [];
+        let taslallocationsTan = [];
+        taslallocations = await this.taskAllocateRepository.find({ where: { cbatchNo: cbatchNo } });
+
+        for (let i = 0; i < taslallocations.length; i++) {
+            taslallocationsTan.push(taslallocations[i].curatorTanNo)
+        }
+
+        let ligands: Ligand001wb[] = [];
+        ligands = await this.ligandRepository.find({ where: { tanNumber: In(taslallocationsTan) } });
+        let ligandids = [];
+        for (let i = 0; i < ligands.length; i++) {
+            ligandids.push(ligands[i].ligandId);
+        }
+
+        let assaysTan: Assay001wb[] = [];
+
+        let assays: Assay001wb[] = [];
+        // assays = await this.assayRepository.find({ relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+        assaysTan = await this.assayRepository.find({ where: { ligandSlno2: { ligandId: In(ligandids) }, updatedUser: username, status: "Submitted to QC" }, relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"] });
+
+        unitsinglevalues = await this.unitsinglevalueRepository.find();
+        unitlowendvalues = await this.unitlowendvalueRepository.find();
+
+        for (let assay001wb of assaysTan) {
+            assay001wb.administration = unescape(assay001wb.administration);
+            assay001wb.procedure = unescape(assay001wb.procedure);
+            assay001wb.ligandSvalue = unescape(assay001wb.ligandSvalue);
+            assay001wb.ligandHvalue = unescape(assay001wb.ligandHvalue);
+            assay001wb.ligandLvalue = unescape(assay001wb.ligandLvalue);
+            assay001wb.conditionMaterial = unescape(assay001wb.conditionMaterial);
+            assay001wb.conditionMaterialid = unescape(assay001wb.conditionMaterialid);
+            assay001wb.singleCondition = unescape(assay001wb.singleCondition);
+            assay001wb.highCondition = unescape(assay001wb.highCondition);
+            assay001wb.lowCondition = unescape(assay001wb.lowCondition);
+            assay001wb.dataLocator1 = unescape(assay001wb.dataLocator1);
+            assay001wb.dataLocator2 = unescape(assay001wb.dataLocator2);
+            assay001wb.dataLocator3 = unescape(assay001wb.dataLocator3);
+            assay001wb.parameter = unescape(assay001wb.parameter);
+            assay001wb.parameterDetail = unescape(assay001wb.parameterDetail);
+            assay001wb.singleValue = unescape(assay001wb.singleValue);
+            assay001wb.highEndValue = unescape(assay001wb.highEndValue);
+            assay001wb.lowEndValue = unescape(assay001wb.lowEndValue);
+            assay001wb.nonNumeric = unescape(assay001wb.nonNumeric);
+            assay001wb.remark = unescape(assay001wb.remark);
+            assay001wb.cell = unescape(assay001wb.cell);
+            assay001wb.cellDetail = unescape(assay001wb.cellDetail);
+            assay001wb.organ = unescape(assay001wb.organ);
+            assay001wb.organDetail = unescape(assay001wb.organDetail);
+            assay001wb.species = unescape(assay001wb.species);
+            assay001wb.speciesDetail = unescape(assay001wb.speciesDetail);
+            assay001wb.ageGroup = unescape(assay001wb.ageGroup);
+            assay001wb.targetVersion = unescape(assay001wb.targetVersion);
+            assay001wb.collectionId1 = unescape(assay001wb.collectionId1);
+            assay001wb.original = unescape(assay001wb.original);
+            assay001wb.acronym = unescape(assay001wb.acronym);
+            assay001wb.organism = unescape(assay001wb.organism);
+            assay001wb.variant = unescape(assay001wb.variant);
+            assay001wb.unit = unescape(assay001wb.unit);
+            assay001wb.units = unescape(assay001wb.units);
+
+            assay001wb.collectionId = unescape(assay001wb.collectionId);
+            assay001wb.conditionType = unescape(assay001wb.conditionType);
+            assay001wb.highLowUnit = unescape(assay001wb.highLowUnit);
+            assay001wb.status = unescape(assay001wb.status);
+            if (assay001wb.ligandSlno2) {
+                assay001wb.ligandSlno2.tanNumber = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.tanNumber : "");
+                assay001wb.ligandSlno2.collection = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.collection : "");
+                assay001wb.ligandSlno2.ligandDetail = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.ligandDetail : "");
+                assay001wb.ligandSlno2.identifier1 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.identifier1 : "");
+                assay001wb.ligandSlno2.identifier2 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.identifier2 : "");
+                assay001wb.ligandSlno2.identifier3 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.identifier3 : "");
+                assay001wb.ligandSlno2.collectionId = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.collectionId : "");
+                assay001wb.ligandSlno2.locator = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.locator : "");
+                assay001wb.ligandSlno2.diseaseName1 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.diseaseName1 : "");
+                assay001wb.ligandSlno2.diseaseName2 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.diseaseName2 : "");
+                assay001wb.ligandSlno2.diseaseName3 = unescape(assay001wb.ligandSlno2 ? assay001wb.ligandSlno2.diseaseName3 : "");
+            } else {
+                assay001wb.ligandSlno2 = new Ligand001wb();
+            }
+            if (assay001wb.assayTypeSlno2) {
+                assay001wb.assayTypeSlno2.assayType = unescape(assay001wb.assayTypeSlno2 ? assay001wb.assayTypeSlno2.assayType : null);
+            } else {
+                assay001wb.assayTypeSlno2 = new Assaytype001mb();
+            }
+            if (assay001wb.toxiCitySlno2) {
+                assay001wb.toxiCitySlno2.toxiCity = unescape(assay001wb.toxiCitySlno2 ? assay001wb.toxiCitySlno2.toxiCity : null);
+            } else {
+                assay001wb.toxiCitySlno2 = new Toxicity001mb();
+            }
+            if (assay001wb.routeSlno2) {
+                assay001wb.routeSlno2.route = unescape(assay001wb.routeSlno2 ? assay001wb.routeSlno2.route : null);
+            } else {
+                assay001wb.routeSlno2 = new Routeofadministration001mb();
+            }
+            if (assay001wb.unitSlno2) {
+                assay001wb.unitSlno2.unit = unescape(assay001wb.unitSlno2 ? assay001wb.unitSlno2.unit : null);
+            } else {
+                assay001wb.unitSlno2 = new Unitsinglevalue001mb();
+            }
+            if (assay001wb.unitedSlno2) {
+                assay001wb.unitedSlno2.united = unescape(assay001wb.unitedSlno2 ? assay001wb.unitedSlno2.united : null);
+            } else {
+                assay001wb.unitedSlno2 = new Unitlowendvalue001mb();
+            }
+            if (assay001wb.categorySlno2) {
+                assay001wb.categorySlno2.category = unescape(assay001wb.categorySlno2 ? assay001wb.categorySlno2.category : null);
+            } else {
+                assay001wb.categorySlno2 = new Category001mb();
+            }
+            if (assay001wb.functionSlno2) {
+                assay001wb.functionSlno2.function = unescape(assay001wb.functionSlno2 ? assay001wb.functionSlno2.function : null);
+            } else {
+                assay001wb.functionSlno2 = new Categoryfunction001mb();
+            }
+            if (assay001wb.originalPrefixSlno2) {
+                assay001wb.originalPrefixSlno2.originalPrefix = unescape(assay001wb.originalPrefixSlno2 ? assay001wb.originalPrefixSlno2.originalPrefix : null);
+            } else {
+                assay001wb.originalPrefixSlno2 = new Originalprefix001mb();
+            }
+            if (assay001wb.typeSlno2) {
+                assay001wb.typeSlno2.type = unescape(assay001wb.typeSlno2 ? assay001wb.typeSlno2.type : null);
+            } else {
+                assay001wb.typeSlno2 = new Type001mb();
+            }
+            assays.push(assay001wb);
+        }
+
+
+        if (assays.length < 0) {
+            return;
+        }
+        else {
+            let workbook: any = null;
+            let worksheet: any = null;
+            let initRow = 3;
+            let flag: boolean = true;
+            let tanNumber: string = null;
+            let batchNo: string = null;
+            workbook = new excel.Workbook();
+            worksheet = await ReportHeader(workbook);
+            for (let i = 0; i < assays.length; i++) {
+                let tempTan = (i == 0) ? 0 : (i != 0) ? (i - 1) : 0;
+                if (assays[tempTan].ligandSlno2?.tanNumber == assays[i].ligandSlno2?.tanNumber) {
+                    let assaycount = assays[i];
+                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    tanNumber = assays[i].ligandSlno2?.tanNumber;
+                    let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
+                    batchNo = taskallocates.cbatchNo
+                    initRow++;
+                } else {
+                    await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
+                    initRow = 3;
+                    workbook = new excel.Workbook();
+                    worksheet = await ReportHeader(workbook);
+                    let assaycount = assays[i];
+                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    tanNumber = assays[i].ligandSlno2?.tanNumber;
+                    let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
+                    batchNo = taskallocates.cbatchNo
+                    initRow++;
+                }
+            }
+            if (batchNo != null) {
+                await workbook.xlsx.writeFile('./EXCEL/' + batchNo + '_export_' + tanNumber + '.xlsx');
+
+                var buffer = await zipdir('./EXCEL');
+                response.send(buffer);
+
+                const directory = './EXCEL';
+                fs.readdir(directory, (err, files) => {
+                    if (err) throw err;
+
+                    for (const file of files) {
+                        fs.unlink(path.join(directory, file), err => {
+                            if (err) throw err;
+                        });
+                    }
+                });
+            }
+            else {
+                throw new HttpException('This Batch Number have no Data!', HttpStatus.NOT_FOUND);
+
+            }
+
+        }
+    }
 
     async downloadExcel(username: any, @Req() request: Request, @Res() response: Response) {
 
