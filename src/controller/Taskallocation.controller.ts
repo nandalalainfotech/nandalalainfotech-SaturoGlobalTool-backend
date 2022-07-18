@@ -42,6 +42,12 @@ export class TaskAllocationController {
 	}
 
 	@UseGuards(JwtAuthGuard)
+	@Get('findCuratorTanNumber/:username')
+	findCuratorTanNumber(@Param('username') username: any): Promise<Taskallocation001wb[]> {
+		return this.taskallocationService.findCuratorTanNumber(username);
+	}
+
+	@UseGuards(JwtAuthGuard)
     @Get('findByTanNo/:username')
     findByTanNo(@Param('username') username: any): Promise<Taskallocation001wb[]> {
         return this.taskallocationService.findByTanNo(username);

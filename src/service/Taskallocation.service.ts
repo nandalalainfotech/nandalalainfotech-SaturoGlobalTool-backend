@@ -76,6 +76,10 @@ export class TaskallocationService {
         return await this.taskAllocateRepository.find();
     }
 
+    async findCuratorTanNumber(username: any): Promise<Taskallocation001wb[]> {
+        return await this.taskAllocateRepository.find({ where: { curatorName: username } });
+    }
+
     async findByTanNo(username: any): Promise<Taskallocation001wb[]> {
         return await this.taskAllocateRepository.find({ where: { curatorName: username } });
     }
@@ -86,7 +90,7 @@ export class TaskallocationService {
 
     async findByCuratorStartEndDate(username: any, startDate: any, endDate: any): Promise<Taskallocation001wb[]> {
             let sDate = new Date(startDate);
-            sDate.setDate(sDate.getDate() - 1);
+            // sDate.setDate(sDate.getDate() - 1);
             let eDate = new Date(endDate);
             eDate.setDate(eDate.getDate() + 1);
            
