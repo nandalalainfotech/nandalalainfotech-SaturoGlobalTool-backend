@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { TaskallocationDTO } from "src/dto/Taskallocation001wb.dto";
 import { Taskallocation001wb } from "src/entity/Taskallocation001wb";
 import { User001mb } from "src/entity/User001mb";
-import { Repository } from "typeorm";
+import { Repository, Between } from "typeorm";
 import { Response } from "express";
 import { Request } from "supertest";
 
@@ -21,7 +21,7 @@ export class TaskallocationService {
 
     }
     async create(file: any, taskallocationDTO: TaskallocationDTO): Promise<Taskallocation001wb[]> {
-        this.taskAllocateRepository.clear();
+        // this.taskAllocateRepository.clear();
         await fs.promises.writeFile('./uploads/helloworld.xlsx', file.buffer, function (err: any) {
             if (err) return console.log(err);
         });
@@ -31,15 +31,12 @@ export class TaskallocationService {
     async createTaskAllocation(taskallocationDTO: TaskallocationDTO): Promise<Taskallocation001wb[]> {
         const file2 = await reader.readFile("./uploads/helloworld.xlsx", { cellDates: true });
         const sheet1 = reader.utils.sheet_to_json(file2.Sheets[file2.SheetNames[0]]);
-        
+
         let sheet = JSON.parse(JSON.stringify(sheet1).replace(/\s(?=\w+":)/g, ""));
-        
-        let taskallocation001wbs: Taskallocation001wb[] = [];
-        let reviewers: User001mb[] = [];
-        reviewers = await this.userRepository.find({ relations: ["role"], where: { roleid: 3 } });
-        for (let i = 0; i < sheet.length-1; i++) {
+
+        for (let i = 0; i < sheet.length; i++) {
             const taskallocation001wb = new Taskallocation001wb();
-            taskallocation001wb.curatorId = i + 1;
+            // taskallocation001wb.taskallocationSlno = i + 1;
             taskallocation001wb.curatorName = sheet[i].CURATORNAME;
             taskallocation001wb.cbatchNo = sheet[i].CBATCHNUMBER;
             taskallocation001wb.curatorTanNo = sheet[i].TANNUMBER;
@@ -59,9 +56,11 @@ export class TaskallocationService {
             date2.setDate(date2.getDate() + 1);
             taskallocation001wb.reviewerAllocateDate = date2;
             this.taskAllocateRepository.save(taskallocation001wb);
-            taskallocation001wbs.push(taskallocation001wb);
+
         }
-        return taskallocation001wbs;
+
+        let taskAllocation = await this.taskAllocateRepository.find();
+        return taskAllocation;
     }
 
 
@@ -69,12 +68,16 @@ export class TaskallocationService {
     async update(taskallocationDTO: TaskallocationDTO): Promise<Taskallocation001wb> {
         const taskallocation001wb = new Taskallocation001wb();
         taskallocation001wb.setProperties(taskallocationDTO);
-        await this.taskAllocateRepository.update({ curatorId: taskallocation001wb.curatorId }, taskallocation001wb);
+        await this.taskAllocateRepository.update({ taskallocationSlno: taskallocation001wb.taskallocationSlno }, taskallocation001wb);
         return taskallocation001wb;
     }
 
     async findAll(username: any): Promise<Taskallocation001wb[]> {
         return await this.taskAllocateRepository.find();
+    }
+
+    async findCuratorTanNumber(username: any): Promise<Taskallocation001wb[]> {
+        return await this.taskAllocateRepository.find({ where: { curatorName: username } });
     }
 
     async findByTanNo(username: any): Promise<Taskallocation001wb[]> {
@@ -85,14 +88,42 @@ export class TaskallocationService {
         return await this.taskAllocateRepository.find({ where: { reviewerName: username } });
     }
 
-    findOne(curatorId: number): Promise<Taskallocation001wb> {
-        return this.taskAllocateRepository.findOne(curatorId);
-    }
-    async remove(curatorId: number): Promise<void> {
-        await this.taskAllocateRepository.delete(curatorId);
+    async findByCuratorStartEndDate(username: any, startDate: any, endDate: any): Promise<Taskallocation001wb[]> {
+            let sDate = new Date(startDate);
+            // sDate.setDate(sDate.getDate() - 1);
+            let eDate = new Date(endDate);
+            eDate.setDate(eDate.getDate() + 1);
+           
+            let sekar= await this.taskAllocateRepository.find({ where: { curatorName: username, updatedDatetime: Between(sDate, eDate), status: "Submitted to QC" } });
+            return sekar;
     }
 
-    async downloadExcel( @Req() request: Request, @Res() response: Response) {
+    async findByStartEndDate(username: any, startDate: any, endDate: any): Promise<Taskallocation001wb[]> {
+        // if (startDate != endDate) {
+            let sDate = new Date(startDate);
+            sDate.setDate(sDate.getDate() - 1);
+            let eDate = new Date(endDate);
+            eDate.setDate(eDate.getDate() + 1);
+
+            return await this.taskAllocateRepository.find({ where: { reviewerName: username, reviewerUpdatedDate: Between(sDate, eDate), reviewerStatus: "Completed" } });
+        // }
+        // else {
+        //     let sDate = new Date(startDate);
+        //     let eDate = new Date(endDate);
+        //     return await this.taskAllocateRepository.find({ where: { reviewerName: username, reviewerUpdatedDate: sDate, reviewerStatus: "Completed" } });
+        // }
+    }
+
+
+
+    findOne(taskallocationSlno: number): Promise<Taskallocation001wb> {
+        return this.taskAllocateRepository.findOne(taskallocationSlno);
+    }
+    async remove(taskallocationSlno: number): Promise<void> {
+        await this.taskAllocateRepository.delete(taskallocationSlno);
+    }
+
+    async downloadExcel(@Req() request: Request, @Res() response: Response) {
         let task = await this.taskAllocateRepository.find();
         if (task.length < 0) {
             return;
@@ -218,7 +249,7 @@ export class TaskallocationService {
             worksheet.getCell('F1').alignment = { vertical: 'left', horizontal: 'left' };
 
 
-             worksheet.mergeCells('G1');
+            worksheet.mergeCells('G1');
             worksheet.getCell('G1').value = "COMPLETED ON";
             worksheet.getCell('G1').font = {
                 size: 11,
@@ -278,7 +309,7 @@ export class TaskallocationService {
             worksheet.getCell('J1').alignment = { vertical: 'left', horizontal: 'left' };
 
 
-              worksheet.mergeCells('K1');
+            worksheet.mergeCells('K1');
             worksheet.getCell('K1').value = "ALLOCATED ON";
             worksheet.getCell('K1').font = {
                 size: 11,
@@ -308,7 +339,7 @@ export class TaskallocationService {
             worksheet.getCell('L1').alignment = { vertical: 'left', horizontal: 'left' };
 
 
-             worksheet.mergeCells('M1');
+            worksheet.mergeCells('M1');
             worksheet.getCell('M1').value = "COMPLETED ON";
             worksheet.getCell('M1').font = {
                 size: 11,

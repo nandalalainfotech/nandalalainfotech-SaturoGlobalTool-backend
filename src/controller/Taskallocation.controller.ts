@@ -42,6 +42,12 @@ export class TaskAllocationController {
 	}
 
 	@UseGuards(JwtAuthGuard)
+	@Get('findCuratorTanNumber/:username')
+	findCuratorTanNumber(@Param('username') username: any): Promise<Taskallocation001wb[]> {
+		return this.taskallocationService.findCuratorTanNumber(username);
+	}
+
+	@UseGuards(JwtAuthGuard)
     @Get('findByTanNo/:username')
     findByTanNo(@Param('username') username: any): Promise<Taskallocation001wb[]> {
         return this.taskallocationService.findByTanNo(username);
@@ -51,6 +57,18 @@ export class TaskAllocationController {
     @Get('findByReviewerTanNo/:username')
     findByReviewerTanNo(@Param('username') username: any): Promise<Taskallocation001wb[]> {
         return this.taskallocationService.findByReviewerTanNo(username);
+    }
+
+	@UseGuards(JwtAuthGuard)
+    @Get('findByCuratorStartEndDate/:username/:startDate/:endDate')
+    findByCuratorStartEndDate(@Param('username') username: any,@Param('startDate') startDate: any,@Param('endDate') endDate: any): Promise<Taskallocation001wb[]> {
+		return this.taskallocationService.findByCuratorStartEndDate(username,startDate,endDate);
+    }
+
+	@UseGuards(JwtAuthGuard)
+    @Get('findByStartEndDate/:username/:startDate/:endDate')
+    findByStartEndDate(@Param('username') username: any,@Param('startDate') startDate: any,@Param('endDate') endDate: any): Promise<Taskallocation001wb[]> {
+        return this.taskallocationService.findByStartEndDate(username,startDate,endDate);
     }
 
 	@UseGuards(JwtAuthGuard)

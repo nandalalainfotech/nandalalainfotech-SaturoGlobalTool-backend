@@ -107,7 +107,6 @@ export class LigandService {
         //         "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
         //         "assay001wbs.categorySlno2", "assay001wbs.functionSlno2", "assay001wbs.originalPrefixSlno2", "assay001wbs.typeSlno2"]
         // });
-        // console.log("ligand001wbs--->>>",ligand001wbs);
         ligand001wb = await this.ligandRepository.createQueryBuilder('ligand001wb')
             .select(['ligand001wb.ligandId',
                 'ligand001wb.tanNumber',
@@ -201,9 +200,10 @@ export class LigandService {
         return this.ligandRepository.findOne({ where: { ligandId: id }, relations: ["ligandVersionSlno2", "ligandTypeSlno2"] });
     }
 
-    async updateStatus(ligandId: any, tanNumber: any): Promise<Ligand001wb> {
+    async updateStatus(username:any,ligandId: any, tanNumber: any): Promise<Ligand001wb> {
         const ligand001wbUpdate = new Ligand001wb();
         ligand001wbUpdate.status = "Submitted to QC";
+        ligand001wbUpdate.updatedUser = username;
         ligand001wbUpdate.updatedDatetime = new Date();
         const ligand001wbs = await this.ligandRepository.find({
             where: { tanNumber: tanNumber }, relations: ["ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
@@ -215,6 +215,8 @@ export class LigandService {
             for (let assay of ligand001wb.assay001wbs) {
                 let newAssas = new Assay001wb();
                 newAssas.status = "Submitted to QC";
+                newAssas.updatedUser = username;
+                newAssas.updatedDatetime = new Date();
                 await this.assayRepository.save({ ...assay, ...newAssas });
             }
         }
@@ -228,10 +230,10 @@ export class LigandService {
     }
 
     async reviewerAcceptStatusUpdate(tanNumber: any,username:any): Promise<Ligand001wb> {
-        console.log("username accept--->>",username);
         const ligand001wbUpdate = new Ligand001wb();
         ligand001wbUpdate.status = "Completed";
         ligand001wbUpdate.updatedUser = username;
+        ligand001wbUpdate.updatedDatetime = new Date();
         const ligand001wbs = await this.ligandRepository.find({
             where: { tanNumber: tanNumber }, relations: ["ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
                 "assay001wbs.toxiCitySlno2", "assay001wbs.routeSlno2", "assay001wbs.unitSlno2", "assay001wbs.unitedSlno2",
@@ -243,6 +245,7 @@ export class LigandService {
                 let newAssas = new Assay001wb();
                 newAssas.status = "Completed";
                 newAssas.updatedUser = username;
+                newAssas.updatedDatetime = new Date();
                 await this.assayRepository.save({ ...assay, ...newAssas });
             }
         }
@@ -256,7 +259,6 @@ export class LigandService {
     }
 
     async reviewerRejectStatusUpdate(tanNumber: any,username:any): Promise<Ligand001wb> {
-console.log("username reject--->>",username);
 
         const ligand001wbs = await this.ligandRepository.find({
             where: { tanNumber: tanNumber }, relations: ["ligandVersionSlno2", "ligandTypeSlno2", "assay001wbs", "assay001wbs.assayTypeSlno2",
@@ -264,7 +266,6 @@ console.log("username reject--->>",username);
                 "assay001wbs.categorySlno2", "assay001wbs.functionSlno2", "assay001wbs.originalPrefixSlno2", "assay001wbs.typeSlno2"]
         });
 
-        // console.log("ligand001wbs", ligand001wbs);
         let ligand001wbUpdate = new Ligand001wb();
         ligand001wbUpdate.status = "Rejected";
         ligand001wbUpdate.updatedUser = username;
@@ -296,8 +297,8 @@ console.log("username reject--->>",username);
             ligand001wbUpdate.acronym = "";
             ligand001wbUpdate.organism = "";
             ligand001wbUpdate.variant = "";
+            ligand001wbUpdate.updatedDatetime = new Date();
             // let ligandUpdate = { ...ligand001wb, ...ligand001wbUpdate };
-            // console.log("ligandUpdate--->",ligandUpdate);
             // await this.ligandRepository.update( {ligandId : ligand001wb.ligandId}, { ...ligand001wb, ...ligand001wbUpdate });
             await this.ligandRepository.save({ ...ligand001wb, ...ligand001wbUpdate });
 
@@ -369,9 +370,9 @@ console.log("username reject--->>",username);
             newAssas.acronym = "";
             newAssas.organism = "";
             newAssas.variant = "";
+            newAssas.updatedDatetime = new Date();
             for (let assay of ligand001wb.assay001wbs) {
-                console.log("assay",assay);
-                console.log("newAssas",newAssas);
+               
                 await this.assayRepository.save({ ...assay, ...newAssas });
             }
         }
@@ -381,7 +382,6 @@ console.log("username reject--->>",username);
         taskallocation001wb.reviewerStatus = "Rejected";
         taskallocation001wb.reviewerUpdatedDate = new Date();
         await this.taskAllocateRepository.update({ curatorTanNo: tanNumber }, taskallocation001wb);
-        // console.log("ligand001wb", ligand001wbUpdate);
         return ligand001wbUpdate;
     }
 
