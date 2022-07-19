@@ -35,6 +35,12 @@ export class ReportsController {
     }
 
     // @UseGuards(JwtAuthGuard, RolesGuard)
+    @Get('curatorTanExcel/:curatorTanNo')
+    async curatorTanExcel(@Param('curatorTanNo') curatorTanNo: any, @Req() request: Request, @Res() response: Response) {
+        return await this.reportsService.curatorTanExcel(curatorTanNo, request, response);
+    }
+
+    // @UseGuards(JwtAuthGuard, RolesGuard)
     @Get('batchNumberExportExcel/:username/:rbatchNo')
     async batchNumberExportExcel(@Param('username') username: any,@Param('rbatchNo') rbatchNo: any, @Req() request: Request, @Res() response: Response) {
         return await this.reportsService.batchNumberExportExcel(username, rbatchNo,request, response);
