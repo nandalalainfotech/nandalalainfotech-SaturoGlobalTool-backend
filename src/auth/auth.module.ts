@@ -16,7 +16,7 @@ import { AuthService } from './services/auth.service';
             imports: [ConfigModule], // Missing this
             useFactory: async (configService: ConfigService) => ({
                 secret: configService.get('JWT_SECRET'),
-                signOptions: { expiresIn: '5000s' }
+                signOptions: { expiresIn: '5000000s' }
             }),
             inject: [ConfigService],
         }),

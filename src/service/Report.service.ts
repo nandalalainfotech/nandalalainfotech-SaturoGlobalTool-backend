@@ -536,13 +536,15 @@ export class ReportsService {
             let flag: boolean = true;
             let tanNumber: string = null;
             let batchNo: string = null;
+            let k=0;
             workbook = new excel.Workbook();
             worksheet = await ReportHeader(workbook);
             for (let i = 0; i < assays.length; i++) {
                 let tempTan = (i == 0) ? 0 : (i != 0) ? (i - 1) : 0;
                 if (assays[tempTan].ligandSlno2?.tanNumber == assays[i].ligandSlno2?.tanNumber) {
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    k=k+1;
+                    await TotalExcelReportData(worksheet, initRow, assaycount, i,k, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
                     batchNo = taskallocates.rbatchNo
@@ -553,7 +555,8 @@ export class ReportsService {
                     workbook = new excel.Workbook();
                     worksheet = await ReportHeader(workbook);
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    k=1;
+                    await TotalExcelReportData(worksheet, initRow, assaycount, i,k, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
                     batchNo = taskallocates.rbatchNo
@@ -729,13 +732,15 @@ export class ReportsService {
             let flag: boolean = true;
             let tanNumber: string = null;
             let batchNo: string = null;
+            let k=0;
             workbook = new excel.Workbook();
             worksheet = await ReportHeader(workbook);
             for (let i = 0; i < assays.length; i++) {
                 let tempTan = (i == 0) ? 0 : (i != 0) ? (i - 1) : 0;
                 if (assays[tempTan].ligandSlno2?.tanNumber == assays[i].ligandSlno2?.tanNumber) {
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    k=k+1;
+                    await TotalExcelReportData(worksheet, initRow, assaycount, i,k, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
                     batchNo = taskallocates.rbatchNo
@@ -746,7 +751,8 @@ export class ReportsService {
                     workbook = new excel.Workbook();
                     worksheet = await ReportHeader(workbook);
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    k=1;
+                    await TotalExcelReportData(worksheet, initRow, assaycount, i,k, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
                     batchNo = taskallocates.rbatchNo
@@ -926,6 +932,7 @@ export class ReportsService {
             let flag: boolean = true;
             let tanNumber: string = null;
             let batchNo: string = null;
+            let k=0;
             workbook = new excel.Workbook();
             worksheet = await ReportHeader(workbook);
             for (let i = 0; i < assays.length; i++) {
@@ -933,7 +940,8 @@ export class ReportsService {
 
                 if (assays[tempTan].ligandSlno2?.tanNumber == assays[i].ligandSlno2?.tanNumber) {
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    k=k+1;
+                    await TotalExcelReportData(worksheet, initRow, assaycount, i,k, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
                     batchNo = taskallocates.cbatchNo
@@ -944,7 +952,8 @@ export class ReportsService {
                     workbook = new excel.Workbook();
                     worksheet = await ReportHeader(workbook);
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    k=1;
+                    await TotalExcelReportData(worksheet, initRow, assaycount, i,k, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
                     batchNo = taskallocates.cbatchNo
@@ -1123,11 +1132,13 @@ export class ReportsService {
             let batchNo: string = null;
             workbook = new excel.Workbook();
             worksheet = await ReportHeader(workbook);
+            let k=0;
             for (let i = 0; i < assays.length; i++) {
                 let tempTan = (i == 0) ? 0 : (i != 0) ? (i - 1) : 0;
                 if (assays[tempTan].ligandSlno2?.tanNumber == assays[i].ligandSlno2?.tanNumber) {
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    k = k+1;
+                    await TotalExcelReportData(worksheet, initRow, assaycount, i,k, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
                     batchNo = taskallocates.cbatchNo
@@ -1138,7 +1149,8 @@ export class ReportsService {
                     workbook = new excel.Workbook();
                     worksheet = await ReportHeader(workbook);
                     let assaycount = assays[i];
-                    await ReportData(worksheet, initRow, assaycount, i, unitsinglevalues, unitlowendvalues);
+                    k =1;
+                    await TotalExcelReportData(worksheet, initRow, assaycount, i, k, unitsinglevalues, unitlowendvalues);
                     tanNumber = assays[i].ligandSlno2?.tanNumber;
                     let taskallocates = await this.taskAllocateRepository.findOne({ where: { curatorTanNo: tanNumber } });
                     batchNo = taskallocates.cbatchNo
