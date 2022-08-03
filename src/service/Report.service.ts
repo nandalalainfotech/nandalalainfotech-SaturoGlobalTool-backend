@@ -593,7 +593,7 @@ export class ReportsService {
 
         let sDate = new Date(startDate);
         // sDate = sDate.getDate() -1;
-        sDate.setDate(sDate.getDate() - 1);
+        // sDate.setDate(sDate.getDate() - 1);
         let eDate = new Date(endDate);
         eDate.setDate(eDate.getDate() + 1);
 
@@ -801,11 +801,6 @@ export class ReportsService {
         let assaysTan: Assay001wb[] = [];
 
         let assays: Assay001wb[] = [];
-
-        // assaysTan = await this.assayRepository.find({
-        //     where: { updatedDatetime: Between(sDate, eDate), ligandSlno2: { ligandId: In(ligandids) } },
-        //     relations: ["assayTypeSlno2", "toxiCitySlno2", "routeSlno2", "unitSlno2", "unitedSlno2", "ligandSlno2", "ligandSlno2.ligandVersionSlno2", "ligandSlno2.ligandTypeSlno2", "categorySlno2", "functionSlno2", "originalPrefixSlno2", "typeSlno2"]
-        // });
 
         assaysTan = await this.assayRepository.find({
             where:
