@@ -7,21 +7,65 @@ import { RolesGuard } from "src/role/role.guard";
 import { TaskallocationService } from "src/service/Taskallocation.service";
 import { Response } from "express";
 import { Request } from "supertest";
- 
-@Controller('/testandreportstudio/api/taskallocation')		
+
+@Controller('/testandreportstudio/api/taskallocation')
 export class TaskAllocationController {
 	constructor(private readonly taskallocationService: TaskallocationService) { }
 
 	@UseGuards(JwtAuthGuard, RolesGuard)
-    @Get('excel')
-    @Header("Content-Type",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    @Header("Content-Disposition",
-        "attachment; filename=" + "Attendace Report" + ".xlsx")
-    
-    async downloadExcel( @Req() request: Request, @Res() response: Response) {
-        return await this.taskallocationService.downloadExcel( request, response);
-    }
+	@Get('excel')
+	@Header("Content-Type",
+		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	@Header("Content-Disposition",
+		"attachment; filename=" + "Attendace Report" + ".xlsx")
+
+	async downloadExcel(@Req() request: Request, @Res() response: Response) {
+		return await this.taskallocationService.downloadExcel(request, response);
+	}
+
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('adminStartEndDateExportExcel/:startDate/:endDate')
+	@Header("Content-Type",
+		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	@Header("Content-Disposition",
+		"attachment; filename=" + "Attendace Report" + ".xlsx")
+
+		async adminStartEndDateExportExcel(@Param('startDate') startDate: any, @Param('endDate') endDate: any, @Req() request: Request, @Res() response: Response) {
+			return this.taskallocationService.adminStartEndDateExportExcel(startDate, endDate, request, response);
+		}
+
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('adminBatchNumberExportExcel/:batchNo')
+	@Header("Content-Type",
+		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	@Header("Content-Disposition",
+		"attachment; filename=" + "Attendace Report" + ".xlsx")
+
+	async adminBatchNumberExportExcel(@Param('batchNo') batchNo: any, @Req() request: Request, @Res() response: Response) {
+		return this.taskallocationService.adminBatchNumberExportExcel(batchNo, request, response);
+	}
+
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('curatorNameExportExcel/:curatorName')
+	@Header("Content-Type",
+		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	@Header("Content-Disposition",
+		"attachment; filename=" + "Attendace Report" + ".xlsx")
+
+	async curatorNameExportExcel(@Param('curatorName') curatorName: any, @Req() request: Request, @Res() response: Response) {
+		return this.taskallocationService.curatorNameExportExcel(curatorName, request, response);
+	}
+
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@Get('reviewerNameExportExcel/:reviewerName')
+	@Header("Content-Type",
+		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	@Header("Content-Disposition",
+		"attachment; filename=" + "Attendace Report" + ".xlsx")
+
+	async reviewerNameExportExcel(@Param('reviewerName') reviewerName: any, @Req() request: Request, @Res() response: Response) {
+		return this.taskallocationService.reviewerNameExportExcel(reviewerName, request, response);
+	}
 
 	@Post('save')
 	@UseInterceptors(FileInterceptor('file'))
@@ -34,7 +78,7 @@ export class TaskAllocationController {
 	update(@Body() taskallocationDTO: TaskallocationDTO): Promise<Taskallocation001wb> {
 		return this.taskallocationService.update(taskallocationDTO);
 	}
-	
+
 	@UseGuards(JwtAuthGuard)
 	@Get('findAll/:username')
 	findAll(@Param('username') username: any): Promise<Taskallocation001wb[]> {
@@ -48,35 +92,35 @@ export class TaskAllocationController {
 	}
 
 	@UseGuards(JwtAuthGuard)
-    @Get('findByTanNo/:username')
-    findByTanNo(@Param('username') username: any): Promise<Taskallocation001wb[]> {
-        return this.taskallocationService.findByTanNo(username);
-    }
+	@Get('findByTanNo/:username')
+	findByTanNo(@Param('username') username: any): Promise<Taskallocation001wb[]> {
+		return this.taskallocationService.findByTanNo(username);
+	}
 
 	@UseGuards(JwtAuthGuard)
-    @Get('findByReviewerTanNo/:username')
-    findByReviewerTanNo(@Param('username') username: any): Promise<Taskallocation001wb[]> {
-        return this.taskallocationService.findByReviewerTanNo(username);
-    }
+	@Get('findByReviewerTanNo/:username')
+	findByReviewerTanNo(@Param('username') username: any): Promise<Taskallocation001wb[]> {
+		return this.taskallocationService.findByReviewerTanNo(username);
+	}
 
 	@UseGuards(JwtAuthGuard)
-    @Get('findByCuratorStartEndDate/:username/:startDate/:endDate')
-    findByCuratorStartEndDate(@Param('username') username: any,@Param('startDate') startDate: any,@Param('endDate') endDate: any): Promise<Taskallocation001wb[]> {
-		return this.taskallocationService.findByCuratorStartEndDate(username,startDate,endDate);
-    }
+	@Get('findByCuratorStartEndDate/:username/:startDate/:endDate')
+	findByCuratorStartEndDate(@Param('username') username: any, @Param('startDate') startDate: any, @Param('endDate') endDate: any): Promise<Taskallocation001wb[]> {
+		return this.taskallocationService.findByCuratorStartEndDate(username, startDate, endDate);
+	}
 
 	@UseGuards(JwtAuthGuard)
-    @Get('findByStartEndDate/:username/:startDate/:endDate')
-    findByStartEndDate(@Param('username') username: any,@Param('startDate') startDate: any,@Param('endDate') endDate: any): Promise<Taskallocation001wb[]> {
-        return this.taskallocationService.findByStartEndDate(username,startDate,endDate);
-    }
+	@Get('findByStartEndDate/:username/:startDate/:endDate')
+	findByStartEndDate(@Param('username') username: any, @Param('startDate') startDate: any, @Param('endDate') endDate: any): Promise<Taskallocation001wb[]> {
+		return this.taskallocationService.findByStartEndDate(username, startDate, endDate);
+	}
 
 	@UseGuards(JwtAuthGuard)
 	@Delete('delete/:id')
 	remove(@Param('id') id: number): Promise<void> {
 		return this.taskallocationService.remove(id);
 	}
-    
+
 	@UseGuards(JwtAuthGuard)
 	@Get(':id')
 	findOne(@Param('id') id: number): Promise<Taskallocation001wb> {

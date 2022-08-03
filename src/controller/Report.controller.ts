@@ -63,5 +63,11 @@ export class ReportsController {
     async curatorBatchNumberExportExcel(@Param('username') username: any,@Param('cbatchNo') cbatchNo: any, @Req() request: Request, @Res() response: Response) {
         return await this.reportsService.curatorBatchNumberExportExcel(username, cbatchNo,request, response);
     }
+
+    // // @UseGuards(JwtAuthGuard, RolesGuard)
+    // @Get('adminStartEndDateExportExcel/:startDate/:endDate')
+    // async adminStartEndDateExportExcel(@Param('startDate') startDate: any,@Param('endDate') endDate: any, @Req() request: Request, @Res() response: Response) {
+    //     return await this.reportsService.adminStartEndDateExportExcel( startDate,endDate,request, response);
+    // }
      
 }
